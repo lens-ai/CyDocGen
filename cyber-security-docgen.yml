@@ -1,0 +1,174 @@
+# 🏥 FDA Cybersecurity Documentation Generator - Client Workflow
+# Copy this file to .github/workflows/fda-docs.yml in your repository
+# Then add required secrets to your repository settings
+
+name: 🏥 Generate FDA Documentation
+
+on:
+  workflow_dispatch:
+    inputs:
+      device_name:
+        description: 'Your Medical Device Name'
+        required: true
+        default: 'My Medical Device'
+      device_manufacturer:
+        description: 'Your Company Name'
+        required: true
+        default: 'My Company'
+      device_version:
+        description: 'Software Version'
+        required: false
+        default: '1.0.0'
+      output_format:
+        description: 'Documentation Scope'
+        required: false
+        default: 'full'
+        type: choice
+        options:
+          - full
+          - incremental
+
+jobs:
+  generate-fda-docs:
+    name: 🏥 Generate FDA Documents
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📋 Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: 🐳 Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: 📦 Pull FDA Generator and Tools
+      run: |
+        echo "📦 Pulling FDA Generator container from Docker Hub..."
+        docker pull lensai/lensai-fda-cybersecurity:latest
+        
+        echo "📦 Pulling official MCP containers from Docker Hub..."
+        docker pull mcp/github:latest
+        docker pull mcp/atlassian:latest
+        
+        echo "📦 Verifying MCP containers..."
+        docker images | grep mcp/ || (echo "❌ MCP containers not found!" && exit 1)
+        
+        echo "📦 Pulling SBOM generation tools..."
+        docker pull anchore/syft:latest
+        docker pull anchore/grype:latest
+        
+        echo "✅ All containers ready!"
+
+    - name: 🏥 Generate FDA Documentation
+      run: |
+        echo "🚀 Starting FDA documentation generation..."
+        echo "📊 Analyzing repository: ${{ github.repository }}"
+        echo "🏥 Device: ${{ github.event.inputs.device_name }} v${{ github.event.inputs.device_version }}"
+        
+        # Create output directory
+        mkdir -p ./fda-output
+        
+        # Note: Using pre-built container from Docker Hub
+        # Make sure lensai/lensai-fda-cybersecurity:latest is up to date
+        # Container includes MCP Direct Docker client for spawning MCP containers
+        
+        # Record start time
+        START_TIME=$(date +%s)
+        
+        # Run FDA documentation generator with MCP Docker spawn mode
+        # The container will spawn MCP containers internally if available
+        docker run --rm \
+          -e BASETEN_API_KEY="${{ secrets.BASETEN_API_KEY }}" \
+          -e BASETEN_MODEL="deepseek-ai/DeepSeek-R1" \
+          -e GITHUB_TOKEN="${{ secrets.GITHUB_TOKEN }}" \
+          -e GITHUB_REPO="${{ github.repository }}" \
+          -e DEVICE_NAME="${{ github.event.inputs.device_name }}" \
+          -e DEVICE_VERSION="${{ github.event.inputs.device_version }}" \
+          -e DEVICE_MANUFACTURER="${{ github.event.inputs.device_manufacturer }}" \
+          -e JIRA_URL="${{ secrets.JIRA_URL }}" \
+          -e JIRA_EMAIL="${{ secrets.JIRA_EMAIL }}" \
+          -e JIRA_API_TOKEN="${{ secrets.JIRA_API_TOKEN }}" \
+          -e JIRA_PROJECT_KEY="${{ secrets.JIRA_PROJECT_KEY }}" \
+          -e CONFLUENCE_URL="${{ secrets.CONFLUENCE_URL }}" \
+          -e CONFLUENCE_EMAIL="${{ secrets.CONFLUENCE_EMAIL }}" \
+          -e CONFLUENCE_API_TOKEN="${{ secrets.CONFLUENCE_API_TOKEN }}" \
+          -e CONFLUENCE_SPACE_KEY="${{ secrets.CONFLUENCE_SPACE_KEY }}" \
+          -e JIRA_RECENT_DAYS="90" \
+          -e JIRA_SECURITY_DAYS="180" \
+          -e JIRA_DEFAULT_DAYS="60" \
+          -e FDA_MIN_GITHUB_COMMITS="3" \
+          -e FDA_MIN_SEMGREP_FINDINGS="0" \
+          -e FDA_MIN_JIRA_TICKETS="0" \
+          -e FDA_MIN_CONFLUENCE_PAGES="0" \
+          -e FDA_MIN_SBOM_COMPONENTS="5" \
+          -v /var/run/docker.sock:/var/run/docker.sock \
+          -v ${{ github.workspace }}:/repo:ro \
+          -v ${{ github.workspace }}/fda-output:/output \
+          lensai/lensai-fda-cybersecurity:latest \
+          python -m src.main --mode ${{ github.event.inputs.output_format }} --output-dir /output
+        
+        # Calculate generation time
+        END_TIME=$(date +%s)
+        DURATION=$((END_TIME - START_TIME))
+        
+        # Count generated documents
+        DOC_COUNT=$(find ./fda-output -name "*.md" -type f | wc -l)
+        
+        # Calculate success rate
+        if [ "${{ github.event.inputs.output_format }}" = "full" ]; then
+          TOTAL_DOCS=11
+        else
+          TOTAL_DOCS=6  # Essential documents only
+        fi
+        SUCCESS_RATE=$(( (DOC_COUNT * 100) / TOTAL_DOCS ))
+        
+        echo "📊 GENERATION RESULTS:"
+        echo "   Documents Generated: $DOC_COUNT/$TOTAL_DOCS ($SUCCESS_RATE%)"
+        echo "   Generation Time: ${DURATION}s"
+        echo "   Output Directory: ./fda-output/"
+        
+        echo "📄 Generated FDA Documents:"
+        find ./fda-output -name "*.md" -type f -exec basename {} \; | sort
+    
+    - name: 📊 Upload FDA Documents
+      uses: actions/upload-artifact@v4
+      with:
+        name: fda-cybersecurity-docs-${{ github.run_id }}
+        path: ./fda-output/
+        retention-days: 30
+        if-no-files-found: error
+    
+    - name: 📋 Summary
+      run: |
+        echo "## 🏥 FDA Documentation Generated" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### ✅ Success!" >> $GITHUB_STEP_SUMMARY
+        echo "- **Device**: ${{ github.event.inputs.device_name }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Manufacturer**: ${{ github.event.inputs.device_manufacturer }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Version**: ${{ github.event.inputs.device_version }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Format**: ${{ github.event.inputs.output_format }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Documents**: $(find ./fda-output -name "*.md" -type f | wc -l)" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### 📄 Generated Files:" >> $GITHUB_STEP_SUMMARY
+        find ./fda-output -name "*.md" -type f -exec basename {} \; | sort | sed 's/^/- ✅ /' >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "Download the artifacts above to get your FDA cybersecurity documentation!" >> $GITHUB_STEP_SUMMARY
+
+# === CONFIGURATION NOTES ===
+#
+# ENVIRONMENT VARIABLES (NEW!):
+# The following environment variables can be adjusted based on your needs:
+#
+# JIRA Time Windows:
+# - JIRA_RECENT_DAYS: Days to look back for recent issues (default: 30, example uses 90)
+# - JIRA_SECURITY_DAYS: Days to look back for security issues (default: 60, example uses 180)
+# - JIRA_DEFAULT_DAYS: Default time window (default: 30, example uses 60)
+#
+# FDA Evidence Requirements:
+# - FDA_MIN_GITHUB_COMMITS: Minimum GitHub commits required (default: 3)
+# - FDA_MIN_SEMGREP_FINDINGS: Minimum Semgrep findings (default: 0 = optional)
+# - FDA_MIN_JIRA_TICKETS: Minimum JIRA tickets (default: 1, example uses 0 = optional)
+# - FDA_MIN_CONFLUENCE_PAGES: Minimum Confluence pages (default: 0 = optional)
+# - FDA_MIN_SBOM_COMPONENTS: Minimum SBOM components (default: 10)
+#
+# Adjust these values based on your project's maturity and activity level.
+# For new projects with limited history, consider setting lower minimums.
