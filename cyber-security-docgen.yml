@@ -42,8 +42,23 @@ jobs:
 
     - name: 📦 Pull FDA Generator and Tools
       run: |
-        echo "📦 Pulling FDA Generator container from Docker Hub..."
-        docker pull lensai/lensai-fda-cybersecurity:latest
+        # Define FDA generator version (pin to specific version for stability)
+        # Options: 
+        #   - Specific version: 1.2.3
+        #   - Minor version: 1.2 (auto-updates patch versions)
+        #   - Major version: 1 (auto-updates minor & patch)
+        #   - Latest: latest (always newest, less stable)
+        FDA_VERSION="${{ vars.FDA_GENERATOR_VERSION || '1' }}"  # Default to major version 1
+        
+        echo "📦 Pulling FDA Generator container (version: ${FDA_VERSION})..."
+        if docker pull lensai/lensai-fda-cybersecurity:${FDA_VERSION}; then
+          echo "✅ Using FDA Generator version: ${FDA_VERSION}"
+          # Tag it as 'latest' locally for consistency
+          docker tag lensai/lensai-fda-cybersecurity:${FDA_VERSION} lensai/lensai-fda-cybersecurity:latest
+        else
+          echo "⚠️ Version ${FDA_VERSION} not found, falling back to latest..."
+          docker pull lensai/lensai-fda-cybersecurity:latest
+        fi
         
         echo "📦 Pulling official MCP containers from Docker Hub..."
         docker pull mcp/github:latest
@@ -77,8 +92,8 @@ jobs:
         # Run FDA documentation generator with MCP Docker spawn mode
         # The container will spawn MCP containers internally if available
         docker run --rm \
-          -e BASETEN_API_KEY="${{ secrets.BASETEN_API_KEY }}" \
-          -e BASETEN_MODEL="deepseek-ai/DeepSeek-R1" \
+          -e LENSAI_API_KEY="${{ secrets.LENSAI_API_KEY }}" \
+          -e LENSAI_MODEL="deepseek-ai/DeepSeek-R1" \
           -e GITHUB_TOKEN="${{ secrets.GITHUB_TOKEN }}" \
           -e GITHUB_REPO="${{ github.repository }}" \
           -e DEVICE_NAME="${{ github.event.inputs.device_name }}" \
@@ -171,4 +186,4 @@ jobs:
 # - FDA_MIN_SBOM_COMPONENTS: Minimum SBOM components (default: 10)
 #
 # Adjust these values based on your project's maturity and activity level.
-# For new projects with limited history, consider setting lower minimums.
+# For new projects with limited history, consider setting lower minimums.%
