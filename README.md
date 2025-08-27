@@ -19,7 +19,7 @@
 1. Go to your repository `Settings → Secrets and variables → Actions`
 2. Add a new repository secret:
    - **Name**: `LENSAI_API_KEY`
-   - **Value**: Your LensAI API key ([Get one here](https://lensai.tech/))
+   - **Value**: Your LensAI API key ([Get one here](https://lensai.tech/cydocgen)
 
 ### Step 3: Run the Action
 1. Go to `Actions` tab in your repository  
@@ -93,7 +93,7 @@ Then uncomment the Atlassian section in your workflow file.
 
 ### ❌ "LENSAI_API_KEY is required"
 - Make sure you added the secret with the exact name `LENSAI_API_KEY`
-- Verify the API key is valid at https://www.lensai.tech/fda-cybersecurity
+- Verify the API key is valid at https://www.lensai.tech/cydocgen
 
 ### ❌ "No documents generated"
 - Check the workflow logs for specific error messages
