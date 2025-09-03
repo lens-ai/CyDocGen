@@ -20,8 +20,19 @@
 2. Add a new repository secret:
    - **Name**: `LENSAI_API_KEY`
    - **Value**: Your LensAI API key ([Get one here](https://lensai.tech/cydocgen)
+## Step 3: Atlassian Integration (Mandatory for Sophisticated Document Generation)
+1. **Jira Secrets:**
+   - `JIRA_URL` - e.g., `https://yourcompany.atlassian.net`
+   - `JIRA_EMAIL` - Your Jira email
+   - `JIRA_API_TOKEN` - [Create one here](https://id.atlassian.com/manage-profile/security/api-tokens)
+   - `JIRA_PROJECT_KEY` - e.g., `MED` or `DEV`
 
-### Step 3: Run the Action
+2. **Confluence Secrets:**
+   - `CONFLUENCE_URL` - e.g., `https://yourcompany.atlassian.net/wiki`
+   - `CONFLUENCE_EMAIL` - Your Confluence email
+   - `CONFLUENCE_API_TOKEN` - Same as Jira token
+   - `CONFLUENCE_SPACE_KEY` - e.g., `DOCS` or `MEDICAL
+### Step 4: Run the Action
 1. Go to `Actions` tab in your repository  
 2. Click `Generate FDA Documentation`
 3. Click `Run workflow`
@@ -32,31 +43,11 @@
    - **Format**: `full` (all 11 docs) or `incremental` (6 core docs)
 5. Click `Run workflow`
 
-### Step 4: Download Results
+### Step 5: Download Results
 1. Wait 5-10 minutes for generation to complete
 2. Go to the workflow run
 3. Download the `fda-cybersecurity-docs-XXXXX` artifact
 4. Extract and review your FDA documentation!
-
----
-
-## Optional: Atlassian Integration
-
-If you use Jira and Confluence, add these secrets for richer documentation:
-
-**Jira Secrets:**
-- `JIRA_URL` - e.g., `https://yourcompany.atlassian.net`
-- `JIRA_EMAIL` - Your Jira email
-- `JIRA_API_TOKEN` - [Create one here](https://id.atlassian.com/manage-profile/security/api-tokens)
-- `JIRA_PROJECT_KEY` - e.g., `MED` or `DEV`
-
-**Confluence Secrets:**
-- `CONFLUENCE_URL` - e.g., `https://yourcompany.atlassian.net/wiki`
-- `CONFLUENCE_EMAIL` - Your Confluence email  
-- `CONFLUENCE_API_TOKEN` - Same as Jira token
-- `CONFLUENCE_SPACE_KEY` - e.g., `DOCS` or `MEDICAL`
-
-Then uncomment the Atlassian section in your workflow file.
 
 ---
 
