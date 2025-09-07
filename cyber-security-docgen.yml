@@ -74,6 +74,33 @@ jobs:
         echo "✅ All containers ready!"
 
     - name: 🏥 Generate FDA Documentation
+      env:
+        # Set all environment variables in the shell first
+        LENSAI_API_KEY: ${{ secrets.LENSAI_API_KEY }}
+        LENSAI_MODEL: "deepseek-ai/DeepSeek-V3-0324"
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_REPO: ${{ github.repository }}
+        DEVICE_NAME: ${{ github.event.inputs.device_name }}
+        DEVICE_VERSION: ${{ github.event.inputs.device_version }}
+        DEVICE_MANUFACTURER: ${{ github.event.inputs.device_manufacturer }}
+        JIRA_URL: ${{ secrets.JIRA_URL }}
+        JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
+        JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+        JIRA_PROJECT_KEY: ${{ secrets.JIRA_PROJECT_KEY }}
+        CONFLUENCE_URL: ${{ secrets.CONFLUENCE_URL }}
+        CONFLUENCE_EMAIL: ${{ secrets.CONFLUENCE_EMAIL }}
+        CONFLUENCE_API_TOKEN: ${{ secrets.CONFLUENCE_API_TOKEN }}
+        CONFLUENCE_SPACE_KEY: ${{ secrets.CONFLUENCE_SPACE_KEY }}
+        # JIRA Time Windows
+        JIRA_RECENT_DAYS: "90"
+        JIRA_SECURITY_DAYS: "180"
+        JIRA_DEFAULT_DAYS: "60"
+        # FDA Evidence Requirements
+        FDA_MIN_GITHUB_COMMITS: "3"
+        FDA_MIN_SEMGREP_FINDINGS: "0"
+        FDA_MIN_JIRA_TICKETS: "0"
+        FDA_MIN_CONFLUENCE_PAGES: "0"
+        FDA_MIN_SBOM_COMPONENTS: "5"
       run: |
         echo "🚀 Starting FDA documentation generation..."
         echo "📊 Analyzing repository: ${{ github.repository }}"
@@ -91,30 +118,31 @@ jobs:
         
         # Run FDA documentation generator with MCP Docker spawn mode
         # The container will spawn MCP containers internally if available
+        # Note: Using environment variables from the shell (set in env: above)
         docker run --rm \
-          -e LENSAI_API_KEY="${{ secrets.LENSAI_API_KEY }}" \
-          -e LENSAI_MODEL="deepseek-ai/DeepSeek-R1" \
-          -e GITHUB_TOKEN="${{ secrets.GITHUB_TOKEN }}" \
-          -e GITHUB_REPO="${{ github.repository }}" \
-          -e DEVICE_NAME="${{ github.event.inputs.device_name }}" \
-          -e DEVICE_VERSION="${{ github.event.inputs.device_version }}" \
-          -e DEVICE_MANUFACTURER="${{ github.event.inputs.device_manufacturer }}" \
-          -e JIRA_URL="${{ secrets.JIRA_URL }}" \
-          -e JIRA_EMAIL="${{ secrets.JIRA_EMAIL }}" \
-          -e JIRA_API_TOKEN="${{ secrets.JIRA_API_TOKEN }}" \
-          -e JIRA_PROJECT_KEY="${{ secrets.JIRA_PROJECT_KEY }}" \
-          -e CONFLUENCE_URL="${{ secrets.CONFLUENCE_URL }}" \
-          -e CONFLUENCE_EMAIL="${{ secrets.CONFLUENCE_EMAIL }}" \
-          -e CONFLUENCE_API_TOKEN="${{ secrets.CONFLUENCE_API_TOKEN }}" \
-          -e CONFLUENCE_SPACE_KEY="${{ secrets.CONFLUENCE_SPACE_KEY }}" \
-          -e JIRA_RECENT_DAYS="90" \
-          -e JIRA_SECURITY_DAYS="180" \
-          -e JIRA_DEFAULT_DAYS="60" \
-          -e FDA_MIN_GITHUB_COMMITS="3" \
-          -e FDA_MIN_SEMGREP_FINDINGS="0" \
-          -e FDA_MIN_JIRA_TICKETS="0" \
-          -e FDA_MIN_CONFLUENCE_PAGES="0" \
-          -e FDA_MIN_SBOM_COMPONENTS="5" \
+          -e LENSAI_API_KEY \
+          -e LENSAI_MODEL \
+          -e GITHUB_TOKEN \
+          -e GITHUB_REPO \
+          -e DEVICE_NAME \
+          -e DEVICE_VERSION \
+          -e DEVICE_MANUFACTURER \
+          -e JIRA_URL \
+          -e JIRA_EMAIL \
+          -e JIRA_API_TOKEN \
+          -e JIRA_PROJECT_KEY \
+          -e CONFLUENCE_URL \
+          -e CONFLUENCE_EMAIL \
+          -e CONFLUENCE_API_TOKEN \
+          -e CONFLUENCE_SPACE_KEY \
+          -e JIRA_RECENT_DAYS \
+          -e JIRA_SECURITY_DAYS \
+          -e JIRA_DEFAULT_DAYS \
+          -e FDA_MIN_GITHUB_COMMITS \
+          -e FDA_MIN_SEMGREP_FINDINGS \
+          -e FDA_MIN_JIRA_TICKETS \
+          -e FDA_MIN_CONFLUENCE_PAGES \
+          -e FDA_MIN_SBOM_COMPONENTS \
           -v /var/run/docker.sock:/var/run/docker.sock \
           -v ${{ github.workspace }}:/repo:ro \
           -v ${{ github.workspace }}/fda-output:/output \
