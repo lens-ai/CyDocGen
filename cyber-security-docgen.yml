@@ -32,6 +32,11 @@ jobs:
   generate-fda-docs:
     name: 🏥 Generate FDA Documents
     runs-on: ubuntu-latest
+    permissions:
+      contents: read        # Read repository contents
+      issues: read          # Read issues
+      pull-requests: read   # Read pull requests
+      security-events: read # Read security advisories
     
     steps:
     - name: 📋 Checkout Repository
@@ -83,6 +88,7 @@ jobs:
         DEVICE_NAME: ${{ github.event.inputs.device_name }}
         DEVICE_VERSION: ${{ github.event.inputs.device_version }}
         DEVICE_MANUFACTURER: ${{ github.event.inputs.device_manufacturer }}
+        # Atlassian Integration (OPTIONAL - will work without these)
         JIRA_URL: ${{ secrets.JIRA_URL }}
         JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
         JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
@@ -101,6 +107,10 @@ jobs:
         FDA_MIN_JIRA_TICKETS: "0"
         FDA_MIN_CONFLUENCE_PAGES: "0"
         FDA_MIN_SBOM_COMPONENTS: "5"
+        # Generation settings
+        OUTPUT_DIR: "/output"
+        GENERATION_MODE: "${{ github.event.inputs.output_format || 'full' }}"
+        OUTPUT_FORMAT: "markdown"
       run: |
         echo "🚀 Starting FDA documentation generation..."
         echo "📊 Analyzing repository: ${{ github.repository }}"
@@ -143,6 +153,9 @@ jobs:
           -e FDA_MIN_JIRA_TICKETS \
           -e FDA_MIN_CONFLUENCE_PAGES \
           -e FDA_MIN_SBOM_COMPONENTS \
+          -e OUTPUT_DIR \
+          -e GENERATION_MODE \
+          -e OUTPUT_FORMAT \
           -v /var/run/docker.sock:/var/run/docker.sock \
           -v ${{ github.workspace }}:/repo:ro \
           -v ${{ github.workspace }}/fda-output:/output \
@@ -214,4 +227,4 @@ jobs:
 # - FDA_MIN_SBOM_COMPONENTS: Minimum SBOM components (default: 10)
 #
 # Adjust these values based on your project's maturity and activity level.
-# For new projects with limited history, consider setting lower minimums.%
+# For new projects with limited history, consider setting lower minimums.

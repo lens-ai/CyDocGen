@@ -27,12 +27,7 @@
    - `JIRA_API_TOKEN` - [Create one here](https://id.atlassian.com/manage-profile/security/api-tokens)
    - `JIRA_PROJECT_KEY` - e.g., `MED` or `DEV`
 
-2. **Confluence Secrets:**
-   - `CONFLUENCE_URL` - e.g., `https://yourcompany.atlassian.net/wiki`
-   - `CONFLUENCE_EMAIL` - Your Confluence email
-   - `CONFLUENCE_API_TOKEN` - Same as Jira token
-   - `CONFLUENCE_SPACE_KEY` - e.g., `DOCS` or `MEDICAL
-### Step 4: Run the Action
+### Step 3: Run the Action
 1. Go to `Actions` tab in your repository  
 2. Click `Generate FDA Documentation`
 3. Click `Run workflow`
@@ -43,11 +38,51 @@
    - **Format**: `full` (all 11 docs) or `incremental` (6 core docs)
 5. Click `Run workflow`
 
-### Step 5: Download Results
+### Step 4: Download Results
 1. Wait 5-10 minutes for generation to complete
 2. Go to the workflow run
 3. Download the `fda-cybersecurity-docs-XXXXX` artifact
 4. Extract and review your FDA documentation!
+
+---
+
+## 🎯 Real-World Example
+
+### Microsoft Research hi-ml Project
+See a successful FDA documentation generation in action:
+- **Repository**: [vsnmtej/hi-ml](https://github.com/vsnmtej/hi-ml)
+- **Successful FDA Generation Run**: [View Workflow Run](https://github.com/vsnmtej/hi-ml/actions/runs/17240468311)
+- **Device**: Health Intelligence ML System
+- **Generated**: Full FDA compliance documentation package
+
+This example demonstrates:
+- ✅ Complete workflow setup
+- ✅ Successful document generation
+- ✅ All 11 FDA documents created
+- ✅ SBOM, security assessments, threat models
+- ✅ Integration with GitHub's security features
+
+---
+
+## Optional: Atlassian Integration
+
+**Note: The FDA generator works perfectly without Atlassian!** GitHub data alone provides comprehensive documentation.
+
+If you use Jira and Confluence, add these secrets for even richer documentation:
+
+**Jira Secrets:**
+- `JIRA_URL` - e.g., `https://yourcompany.atlassian.net`
+- `JIRA_EMAIL` - Your Jira email
+- `JIRA_API_TOKEN` - [Create one here](https://id.atlassian.com/manage-profile/security/api-tokens)
+- `JIRA_PROJECT_KEY` - e.g., `MED` or `DEV`
+
+**Confluence Secrets:**
+- `CONFLUENCE_URL` - e.g., `https://yourcompany.atlassian.net/wiki`
+- `CONFLUENCE_EMAIL` - Your Confluence email  
+- `CONFLUENCE_API_TOKEN` - Same as Jira token
+- `CONFLUENCE_SPACE_KEY` - e.g., `DOCS` or `MEDICAL`
+
+Then uncomment the Atlassian section in your workflow file.
 
 ---
 
@@ -84,7 +119,7 @@
 
 ### ❌ "LENSAI_API_KEY is required"
 - Make sure you added the secret with the exact name `LENSAI_API_KEY`
-- Verify the API key is valid at https://www.lensai.tech/cydocgen
+- Verify the API key is valid at https://app.baseten.co/
 
 ### ❌ "No documents generated"
 - Check the workflow logs for specific error messages
