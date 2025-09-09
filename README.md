@@ -119,7 +119,7 @@ Then uncomment the Atlassian section in your workflow file.
 
 ### ❌ "LENSAI_API_KEY is required"
 - Make sure you added the secret with the exact name `LENSAI_API_KEY`
-- Verify the API key is valid at https://app.baseten.co/
+- Verify the API key is valid at https://lensai.tech/CyDocGen
 
 ### ❌ "No documents generated"
 - Check the workflow logs for specific error messages
@@ -135,7 +135,7 @@ Then uncomment the Atlassian section in your workflow file.
 
 ## Support
 
-- **Issues**: [GitHub Issues](https://github.com/lens-ai/lensai-fda-cybersecurity/issues)
+- **Issues**: [GitHub Issues](https://github.com/lens-ai/cydocgen/issues)
 - **Documentation**: See README.md in the main repository
 - **Examples**: Check the `/examples` directory for more templates
 
