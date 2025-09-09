@@ -9,15 +9,32 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-purple: #743EE3;
-            --soft-purple: #997CE6;
-            --soft-blue: #0091E1;
-            --bg-cream: #FFFCF8;
-            --text-dark: #000000;
-            --text-gray: #666564;
-            --light-purple: #F3EFFF;
-            --gradient-start: #743EE3;
-            --gradient-end: #0091E1;
+            /* Modern Professional Color Palette */
+            --primary: #5B47E0;  /* Refined purple - more professional than bright purple */
+            --primary-dark: #4936C9;  /* Darker purple for hover states */
+            --secondary: #0077CC;  /* Professional blue */
+            --accent: #00A6FB;  /* Modern accent blue */
+            
+            /* Background Colors */
+            --bg-primary: #FFFFFF;  /* Clean white */
+            --bg-secondary: #F8F9FA;  /* Light gray background */
+            --bg-tertiary: #F0F2F5;  /* Slightly darker gray */
+            
+            /* Text Colors */
+            --text-primary: #1A1D23;  /* Almost black for headers */
+            --text-secondary: #4A5568;  /* Dark gray for body text */
+            --text-muted: #718096;  /* Muted gray */
+            
+            /* Status Colors */
+            --success: #10B981;  /* Modern green */
+            --warning: #F59E0B;  /* Amber */
+            --danger: #EF4444;  /* Modern red */
+            --info: #3B82F6;  /* Bright blue */
+            
+            /* Gradients */
+            --gradient-start: #5B47E0;
+            --gradient-end: #0077CC;
+            --gradient-subtle: linear-gradient(135deg, rgba(91, 71, 224, 0.03), rgba(0, 119, 204, 0.03));
         }
 
         * {
@@ -28,20 +45,20 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--bg-cream);
-            color: var(--text-gray);
+            background-color: var(--bg-primary);
+            color: var(--text-secondary);
             line-height: 1.6;
         }
 
         h1, h2, h3, h4, h5, h6 {
-            color: var(--text-dark);
+            color: var(--text-primary);
             font-weight: 600;
         }
 
         .navbar {
-            background: rgba(255, 252, 248, 0.95);
+            background: rgba(255, 255, 255, 0.98);
             backdrop-filter: blur(10px);
-            box-shadow: 0 2px 20px rgba(116, 62, 227, 0.1);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             padding: 1rem 0;
         }
 
@@ -55,20 +72,20 @@
         }
 
         .nav-link {
-            color: var(--text-gray) !important;
+            color: var(--text-secondary) !important;
             font-weight: 500;
             margin: 0 0.5rem;
             transition: all 0.3s ease;
         }
 
         .nav-link:hover {
-            color: var(--primary-purple) !important;
+            color: var(--primary) !important;
         }
 
         .hero-section {
             padding: 120px 0 100px 0;
             margin-top: 60px;
-            background: linear-gradient(135deg, rgba(116, 62, 227, 0.05), rgba(0, 145, 225, 0.05));
+            background: var(--gradient-subtle);
             position: relative;
             overflow: hidden;
         }
@@ -80,7 +97,7 @@
             right: -20%;
             width: 60%;
             height: 200%;
-            background: radial-gradient(circle, rgba(116, 62, 227, 0.1) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(91, 71, 224, 0.08) 0%, transparent 70%);
             animation: float 20s ease-in-out infinite;
         }
 
@@ -111,7 +128,8 @@
 
         .btn-primary-custom:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(116, 62, 227, 0.3);
+            box-shadow: 0 8px 20px rgba(91, 71, 224, 0.25);
+            background: linear-gradient(135deg, var(--primary-dark), var(--secondary));
             color: white;
         }
 
@@ -242,7 +260,7 @@
         }
 
         .footer {
-            background: linear-gradient(135deg, rgba(116, 62, 227, 0.05), rgba(0, 145, 225, 0.05));
+            background: var(--gradient-subtle);
             padding: 3rem 0;
             margin-top: 5rem;
         }
@@ -431,7 +449,7 @@
     <section class="hero-section">
         <div class="container">
             <div class="row align-items-center">
-                <div class="col-lg-6">
+                <div class="col-12 col-lg-6 mb-4 mb-lg-0">
                     <h1 class="display-4 fw-bold mb-4" data-aos="fade-right" data-aos-duration="1000">Automated Cybersecurity Documentation</h1>
                     <p class="lead mb-4" data-aos="fade-right" data-aos-delay="200">AI-powered platform that generates comprehensive security documentation from your codebase for any compliance framework.</p>
                     <div class="d-flex gap-3 flex-wrap">
@@ -448,7 +466,7 @@
                         </a>
                     </div>
                 </div>
-                <div class="col-lg-6">
+                <div class="col-12 col-lg-6 mb-4 mb-lg-0">
                     <div class="text-center position-relative" style="height: 400px;">
                         <!-- Central Shield -->
                         <div class="position-absolute" style="top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10;">
@@ -507,8 +525,57 @@
                 <p class="lead">Generate the in-depth security documentation that's critical for meeting any compliance standard</p>
             </div>
             
+            <!-- Industries and Sectors -->
+            <div class="row g-4 mb-5">
+                <div class="col-md-12">
+                    <div class="card border-0 h-100" style="background: white; border-radius: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+                        <div class="card-body p-4">
+                            <h4 class="mb-4 text-center"><i class="fas fa-industry me-2" style="color: var(--primary);"></i>Industries We Serve</h4>
+                            <div class="row g-3">
+                                <div class="col-md-4 col-6">
+                                    <div class="d-flex align-items-center p-2">
+                                        <i class="fas fa-heartbeat me-3" style="color: var(--danger); font-size: 1.2rem;"></i>
+                                        <span>Healthcare & Medical Devices</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-6">
+                                    <div class="d-flex align-items-center p-2">
+                                        <i class="fas fa-university me-3" style="color: var(--secondary); font-size: 1.2rem;"></i>
+                                        <span>Financial Services</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-6">
+                                    <div class="d-flex align-items-center p-2">
+                                        <i class="fas fa-car me-3" style="color: var(--info); font-size: 1.2rem;"></i>
+                                        <span>Automotive</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-6">
+                                    <div class="d-flex align-items-center p-2">
+                                        <i class="fas fa-bolt me-3" style="color: var(--warning); font-size: 1.2rem;"></i>
+                                        <span>Critical Infrastructure</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-6">
+                                    <div class="d-flex align-items-center p-2">
+                                        <i class="fas fa-plane me-3" style="color: var(--primary); font-size: 1.2rem;"></i>
+                                        <span>Aerospace & Defense</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-6">
+                                    <div class="d-flex align-items-center p-2">
+                                        <i class="fas fa-microchip me-3" style="color: var(--success); font-size: 1.2rem;"></i>
+                                        <span>IoT & Embedded Systems</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
             <div class="row g-4">
-                <div class="col-lg-6">
+                <div class="col-12 col-lg-6 mb-4 mb-lg-0">
                     <div class="card border-0 h-100" style="background: white; border-radius: 20px;">
                         <div class="card-body p-4">
                             <h4 class="mb-4"><i class="fas fa-shield-alt text-primary me-2"></i>What CyDocGen Provides</h4>
@@ -527,7 +594,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-6">
+                <div class="col-12 col-lg-6 mb-4 mb-lg-0">
                     <div class="card h-100 border-0" style="background: white; border: 2px solid var(--primary-purple); border-radius: 20px;">
                         <div class="card-body p-4">
                             <h4 class="mb-4"><i class="fas fa-certificate text-success me-2"></i>Compliance Standards Supported</h4>
@@ -580,6 +647,95 @@
             
             <div class="text-center mt-5">
                 <p class="text-muted"><i class="fas fa-check-circle me-2" style="color: var(--primary-purple);"></i>Powered by AI • GitHub Actions Integration • Continuous Documentation</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Integration with Compliance Platforms -->
+    <section id="integration" class="py-5" style="background: white;">
+        <div class="container">
+            <div class="card border-0 mb-5" style="background: linear-gradient(135deg, rgba(40, 167, 69, 0.02), rgba(32, 201, 151, 0.02)); border-radius: 20px;">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <h3><i class="fas fa-puzzle-piece text-success me-2"></i>Enhances Your Existing Compliance Stack</h3>
+                        <p class="lead">CyDocGen provides the deep technical documentation that compliance platforms need but can't generate</p>
+                    </div>
+                    
+                    <div class="row align-items-center">
+                        <div class="col-12 col-md-4 mb-4 mb-md-0">
+                            <h5 class="mb-3">Popular Compliance Platforms</h5>
+                            <div class="compliance-platform mb-3 p-3" style="background: white; border-radius: 10px; border-left: 4px solid #28a745;">
+                                <h6 class="mb-2">Vanta</h6>
+                                <small class="text-muted">SOC 2, ISO 27001, HIPAA</small>
+                            </div>
+                            <div class="compliance-platform mb-3 p-3" style="background: white; border-radius: 10px; border-left: 4px solid #007bff;">
+                                <h6 class="mb-2">Drata</h6>
+                                <small class="text-muted">SOC 2, ISO 27001, GDPR</small>
+                            </div>
+                            <div class="compliance-platform mb-3 p-3" style="background: white; border-radius: 10px; border-left: 4px solid #6610f2;">
+                                <h6 class="mb-2">Other Platforms</h6>
+                                <small class="text-muted">Secureframe, Tugboat Logic, etc.</small>
+                            </div>
+                        </div>
+                        
+                        <div class="col-2 col-md-1 text-center d-none d-md-block">
+                            <i class="fas fa-plus fa-2x text-success"></i>
+                        </div>
+                        
+                        <div class="col-12 col-md-3 mb-4 mb-md-0">
+                            <div class="text-center">
+                                <div class="mb-3" style="background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)); padding: 30px; border-radius: 20px;">
+                                    <i class="fas fa-robot fa-3x text-white mb-2"></i>
+                                    <h5 class="text-white mb-0">CyDocGen</h5>
+                                </div>
+                                <p class="small">Deep Technical Documentation</p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-2 col-md-1 text-center d-none d-md-block">
+                            <i class="fas fa-equals fa-2x text-primary"></i>
+                        </div>
+                        
+                        <div class="col-12 col-md-3">
+                            <div class="result-box p-4 text-center" style="background: linear-gradient(135deg, rgba(40, 167, 69, 0.1), rgba(32, 201, 151, 0.1)); border-radius: 15px;">
+                                <i class="fas fa-trophy fa-3x text-warning mb-2"></i>
+                                <h5>Complete Documentation</h5>
+                                <p class="small mb-0">Policy + Technical Depth</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-5">
+                        <div class="col-12 col-md-6 mb-4 mb-md-0">
+                            <h5><i class="fas fa-times text-danger me-2"></i>What Compliance Platforms Can't Do</h5>
+                            <ul class="small">
+                                <li>Analyze your actual source code</li>
+                                <li>Generate real-time SBOM from your codebase</li>
+                                <li>Create threat models specific to your architecture</li>
+                                <li>Document security controls in your code</li>
+                                <li>Track vulnerabilities in your dependencies</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h5><i class="fas fa-check text-success me-2"></i>What CyDocGen Adds</h5>
+                            <ul class="small">
+                                <li>Automated codebase security analysis</li>
+                                <li>Technical evidence for audit requirements</li>
+                                <li>Real vulnerability data from your stack</li>
+                                <li>Architecture-specific threat models</li>
+                                <li>Continuous documentation with CI/CD</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-success mt-4">
+                        <div class="text-center">
+                            <h6 class="mb-2"><i class="fas fa-lightbulb me-2"></i>Why You Need Both</h6>
+                            <p class="mb-0">Compliance platforms manage policies and controls. CyDocGen provides the technical documentation depth auditors require.</p>
+                            <small>Together, they provide comprehensive evidence for successful audits.</small>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -658,7 +814,7 @@
                 <p class="lead">Seamlessly connect with your existing development and documentation workflow</p>
             </div>
             <div class="row g-4">
-                <div class="col-lg-6">
+                <div class="col-12 col-lg-6 mb-4 mb-lg-0">
                     <div class="card h-100 border-0" style="background: linear-gradient(135deg, rgba(116, 62, 227, 0.05), rgba(0, 145, 225, 0.05)); border-radius: 20px;">
                         <div class="card-body p-4">
                             <div class="d-flex align-items-center mb-3">
@@ -680,7 +836,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-6">
+                <div class="col-12 col-lg-6 mb-4 mb-lg-0">
                     <div class="card h-100 border-0" style="background: linear-gradient(135deg, rgba(116, 62, 227, 0.05), rgba(0, 145, 225, 0.05)); border-radius: 20px;">
                         <div class="card-body p-4">
                             <div class="d-flex align-items-center mb-3">
@@ -727,7 +883,7 @@
                 <p class="lead">Get compliance-ready documentation in 4 simple steps</p>
             </div>
             <div class="row">
-                <div class="col-lg-6">
+                <div class="col-12 col-lg-6 mb-4 mb-lg-0">
                     <div class="workflow-step">
                         <div class="step-number">1</div>
                         <div>
@@ -757,7 +913,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-6">
+                <div class="col-12 col-lg-6 mb-4 mb-lg-0">
                     <h5 class="mb-3">Quick Start Command</h5>
                     <div class="code-block">
                         <code>
@@ -1000,7 +1156,7 @@ on:<br>
                 <p class="lead">Zero data retention policy with complete client control</p>
             </div>
             <div class="row g-4 mb-5">
-                <div class="col-lg-4">
+                <div class="col-12 col-md-6 col-lg-4 mb-4">
                     <div class="card h-100 border-0" style="background: white; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
                         <div class="card-body p-4 text-center">
                             <div class="feature-icon mx-auto mb-3" style="background: linear-gradient(135deg, #28a745, #20c997);">
@@ -1011,7 +1167,7 @@ on:<br>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4">
+                <div class="col-12 col-md-6 col-lg-4 mb-4">
                     <div class="card h-100 border-0" style="background: white; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
                         <div class="card-body p-4 text-center">
                             <div class="feature-icon mx-auto mb-3" style="background: linear-gradient(135deg, #007bff, #0056b3);">
@@ -1022,7 +1178,7 @@ on:<br>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4">
+                <div class="col-12 col-md-6 col-lg-4 mb-4">
                     <div class="card h-100 border-0" style="background: white; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
                         <div class="card-body p-4 text-center">
                             <div class="feature-icon mx-auto mb-3" style="background: linear-gradient(135deg, #6610f2, #6f42c1);">
@@ -1479,90 +1635,6 @@ on:<br>
                 </div>
             </div>
 
-            <!-- Integration with Compliance Platforms -->
-            <div class="card border-0 mb-5" style="background: linear-gradient(135deg, rgba(40, 167, 69, 0.02), rgba(32, 201, 151, 0.02)); border-radius: 20px;">
-                <div class="card-body p-5">
-                    <div class="text-center mb-4">
-                        <h3><i class="fas fa-puzzle-piece text-success me-2"></i>Enhances Your Existing Compliance Stack</h3>
-                        <p class="lead">CyDocGen provides the deep technical documentation that compliance platforms need but can't generate</p>
-                    </div>
-                    
-                    <div class="row align-items-center">
-                        <div class="col-md-4">
-                            <h5 class="mb-3">Popular Compliance Platforms</h5>
-                            <div class="compliance-platform mb-3 p-3" style="background: white; border-radius: 10px; border-left: 4px solid #28a745;">
-                                <h6 class="mb-2">Vanta</h6>
-                                <small class="text-muted">SOC 2, ISO 27001, HIPAA</small>
-                            </div>
-                            <div class="compliance-platform mb-3 p-3" style="background: white; border-radius: 10px; border-left: 4px solid #007bff;">
-                                <h6 class="mb-2">Drata</h6>
-                                <small class="text-muted">SOC 2, ISO 27001, GDPR</small>
-                            </div>
-                            <div class="compliance-platform mb-3 p-3" style="background: white; border-radius: 10px; border-left: 4px solid #6610f2;">
-                                <h6 class="mb-2">Other Platforms</h6>
-                                <small class="text-muted">Secureframe, Tugboat Logic, etc.</small>
-                            </div>
-                        </div>
-                        
-                        <div class="col-md-1 text-center">
-                            <i class="fas fa-plus fa-2x text-success"></i>
-                        </div>
-                        
-                        <div class="col-md-3">
-                            <div class="text-center">
-                                <div class="mb-3" style="background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)); padding: 30px; border-radius: 20px;">
-                                    <i class="fas fa-robot fa-3x text-white mb-2"></i>
-                                    <h5 class="text-white mb-0">CyDocGen</h5>
-                                </div>
-                                <p class="small">Deep Technical Documentation</p>
-                            </div>
-                        </div>
-                        
-                        <div class="col-md-1 text-center">
-                            <i class="fas fa-equals fa-2x text-primary"></i>
-                        </div>
-                        
-                        <div class="col-md-3">
-                            <div class="result-box p-4 text-center" style="background: linear-gradient(135deg, rgba(40, 167, 69, 0.1), rgba(32, 201, 151, 0.1)); border-radius: 15px;">
-                                <i class="fas fa-trophy fa-3x text-warning mb-2"></i>
-                                <h5>Complete Documentation</h5>
-                                <p class="small mb-0">Policy + Technical Depth</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="row mt-5">
-                        <div class="col-md-6">
-                            <h5><i class="fas fa-times text-danger me-2"></i>What Compliance Platforms Can't Do</h5>
-                            <ul class="small">
-                                <li>Analyze your actual source code</li>
-                                <li>Generate real-time SBOM from your codebase</li>
-                                <li>Create threat models specific to your architecture</li>
-                                <li>Document security controls in your code</li>
-                                <li>Track vulnerabilities in your dependencies</li>
-                            </ul>
-                        </div>
-                        <div class="col-md-6">
-                            <h5><i class="fas fa-check text-success me-2"></i>What CyDocGen Adds</h5>
-                            <ul class="small">
-                                <li>Automated codebase security analysis</li>
-                                <li>Technical evidence for audit requirements</li>
-                                <li>Real vulnerability data from your stack</li>
-                                <li>Architecture-specific threat models</li>
-                                <li>Continuous documentation with CI/CD</li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <div class="alert alert-success mt-4">
-                        <div class="text-center">
-                            <h6 class="mb-2"><i class="fas fa-lightbulb me-2"></i>Why You Need Both</h6>
-                            <p class="mb-0">Compliance platforms manage policies and controls. CyDocGen provides the technical documentation depth auditors require.</p>
-                            <small>Together, they provide comprehensive evidence for successful audits.</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </section>
 
@@ -1574,7 +1646,7 @@ on:<br>
                 <p class="lead">See CyDocGen in action with Microsoft Research's hi-ml project</p>
             </div>
             <div class="row align-items-center">
-                <div class="col-lg-6">
+                <div class="col-12 col-lg-6 mb-4 mb-lg-0">
                     <div class="card border-0 shadow-lg" style="border-radius: 20px;">
                         <div class="card-body p-4">
                             <h4 class="mb-3"><i class="fab fa-microsoft me-2"></i>Microsoft Research hi-ml</h4>
@@ -1596,7 +1668,7 @@ on:<br>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-6">
+                <div class="col-12 col-lg-6 mb-4 mb-lg-0">
                     <h5>Data Sources</h5>
                     <div class="mb-3">
                         <span class="badge-custom">GitHub Commits</span>
@@ -1630,9 +1702,9 @@ on:<br>
             </div>
             
             <!-- Token Packages - Free Trial + Profit-Optimized 3-Tier -->
-            <div class="row g-4 mb-5 justify-content-center">
+            <div class="row g-4 mb-5 justify-content-center" style="padding-top: 20px;">
                 <!-- Free Trial -->
-                <div class="col-lg-3">
+                <div class="col-12 col-sm-6 col-lg-3 mb-4">
                     <div class="card h-100 border-0 pricing-card" style="border-radius: 20px; overflow: hidden;">
                         <div class="card-header text-center py-4" style="background: linear-gradient(135deg, #28a745, #20c997); border: none;">
                             <h4 class="mb-0 text-white">Free Trial</h4>
@@ -1648,16 +1720,16 @@ on:<br>
                             <ul class="list-unstyled text-start mb-4">
                                 <li class="mb-2"><i class="fas fa-check text-success me-2"></i>All document types</li>
                                 <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Full feature access</li>
-                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Export to Word/PDF</li>
+                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i>MD file format</li>
                                 <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Community support</li>
                             </ul>
-                            <button class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#getStartedModal">Start Free</button>
+                            <button class="btn-primary-custom w-100" style="padding: 0.75rem 1.5rem;" data-bs-toggle="modal" data-bs-target="#getStartedModal">Start Free Trial</button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Starter - Entry Point -->
-                <div class="col-lg-3">
+                <div class="col-12 col-sm-6 col-lg-3 mb-4">
                     <div class="card h-100 border-0 pricing-card" style="border-radius: 20px; overflow: hidden;">
                         <div class="card-header text-center py-4" style="background: linear-gradient(135deg, #f8f9fa, #e9ecef); border: none;">
                             <h4 class="mb-0">Starter</h4>
@@ -1676,18 +1748,18 @@ on:<br>
                                 <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Usage dashboard</li>
                                 <li class="mb-2"><i class="fas fa-times text-muted me-2"></i>No API access</li>
                             </ul>
-                            <button class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#apiKeyModal" onclick="document.getElementById('planType').value='Starter'">Get Started</button>
+                            <button class="btn-primary-custom w-100" style="padding: 0.75rem 1.5rem;" data-bs-toggle="modal" data-bs-target="#apiKeyModal" onclick="document.getElementById('planType').value='Starter'">Get Started</button>
                         </div>
                     </div>
                 </div>
                 
                 <!-- Professional - Most Popular (Decoy Effect) -->
-                <div class="col-lg-3">
-                    <div class="card h-100 border-0 pricing-card position-relative" style="border-radius: 20px; overflow: hidden; border: 3px solid var(--primary-purple);">
-                        <div class="position-absolute top-0 start-50 translate-middle-x bg-danger text-white px-3 py-1" style="border-radius: 0 0 15px 15px; z-index: 10;">
+                <div class="col-12 col-sm-6 col-lg-3 mb-4">
+                    <div class="card h-100 border-0 pricing-card position-relative" style="border-radius: 20px; overflow: visible; border: 3px solid var(--primary); margin-top: 15px;">
+                        <div class="position-absolute badge bg-danger text-white px-3 py-2" style="top: -15px; left: 50%; transform: translateX(-50%); z-index: 10;">
                             <strong>MOST POPULAR</strong>
                         </div>
-                        <div class="card-header text-center py-4 mt-3" style="background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)); border: none;">
+                        <div class="card-header text-center py-4" style="background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)); border: none;">
                             <h4 class="mb-0 text-white">Professional</h4>
                             <div class="badge bg-warning text-dark mt-2">25M Tokens</div>
                         </div>
@@ -1705,13 +1777,13 @@ on:<br>
                                 <li class="mb-2"><i class="fas fa-check text-success me-2"></i><strong>API access</strong></li>
                                 <li class="mb-2"><i class="fas fa-check text-success me-2"></i><strong>Team sharing (5 users)</strong></li>
                             </ul>
-                            <button class="btn-primary-custom w-100 btn-lg" style="border: none;" data-bs-toggle="modal" data-bs-target="#apiKeyModal" onclick="document.getElementById('planType').value='Professional'">Get Best Value</button>
+                            <button class="btn-primary-custom w-100" style="padding: 0.75rem 1.5rem; border: 2px solid var(--primary-purple);" data-bs-toggle="modal" data-bs-target="#apiKeyModal" onclick="document.getElementById('planType').value='Professional'">Get Best Value</button>
                         </div>
                     </div>
                 </div>
                 
                 <!-- Enterprise - Anchor Price -->
-                <div class="col-lg-3">
+                <div class="col-12 col-sm-6 col-lg-3 mb-4">
                     <div class="card h-100 border-0 pricing-card" style="border-radius: 20px; overflow: hidden;">
                         <div class="card-header text-center py-4" style="background: linear-gradient(135deg, #000428, #004e92); border: none;">
                             <h4 class="mb-0 text-white">Enterprise</h4>
@@ -1730,7 +1802,7 @@ on:<br>
                                 <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Custom integrations</li>
                                 <li class="mb-2"><i class="fas fa-check text-success me-2"></i>SLA guarantee</li>
                             </ul>
-                            <button class="btn-secondary-custom w-100" onclick="window.location.href='mailto:enterprise@lensai.tech'">Contact Sales</button>
+                            <button class="btn-primary-custom w-100" style="padding: 0.75rem 1.5rem;" onclick="window.location.href='mailto:venkata@lensai.tech'">Contact Sales</button>
                         </div>
                     </div>
                 </div>
@@ -1761,7 +1833,7 @@ on:<br>
                                 </table>
                             </div>
                         </div>
-                        <div class="col-lg-6">
+                        <div class="col-12 col-lg-6 mb-4 mb-lg-0">
                             <div class="alert alert-warning">
                                 <h5><i class="fas fa-lightbulb me-2"></i>Pay-As-You-Go Option</h5>
                                 <p class="mb-2">Need flexibility? Purchase tokens as needed:</p>
@@ -1797,7 +1869,7 @@ on:<br>
             <div class="text-center">
                 <h4 class="mb-3">Need a Custom Solution?</h4>
                 <p class="text-muted mb-4">For enterprises with specific requirements, compliance needs, or high-volume usage</p>
-                <button class="btn-secondary-custom" onclick="window.location.href='mailto:enterprise@lensai.tech'">
+                <button class="btn-secondary-custom" onclick="window.location.href='mailto:venkata@lensai.tech'">
                     <i class="fas fa-building me-2"></i>Contact Enterprise Sales
                 </button>
             </div>
