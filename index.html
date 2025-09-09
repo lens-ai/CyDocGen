@@ -88,6 +88,14 @@
             0%, 100% { transform: translateY(0) rotate(0deg); }
             50% { transform: translateY(-20px) rotate(10deg); }
         }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            25% { transform: scale(1.1); }
+            50% { transform: scale(1); }
+            75% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
 
         .btn-primary-custom {
             background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
@@ -1177,6 +1185,45 @@ on:<br>
                     <a href="https://github.com/lens-ai/CyDocGen" target="_blank" rel="noopener noreferrer" class="btn-secondary-custom">
                         <i class="fab fa-github me-2"></i>View on GitHub
                     </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Academic Partners Section -->
+    <section class="py-5" style="background: white;">
+        <div class="container">
+            <div class="text-center mb-4">
+                <h5 class="text-muted mb-3">Trusted by Leading Research Institutions</h5>
+            </div>
+            <div class="row align-items-center justify-content-center">
+                <div class="col-md-4 col-6 text-center mb-4">
+                    <img src="logos/CyLab-Venture-Network.jpg" 
+                         alt="CMU CyLab" 
+                         style="height: 100px; object-fit: contain; opacity: 0.8; transition: opacity 0.3s;"
+                         onmouseover="this.style.opacity='1'" 
+                         onmouseout="this.style.opacity='0.8'">
+                    <p class="small text-muted mt-2 mb-0">Carnegie Mellon University CyLab</p>
+                </div>
+                <div class="col-md-4 col-6 text-center mb-4">
+                    <img src="logos/chai.png" 
+                         alt="Coalition for Health AI" 
+                         style="height: 80px; object-fit: contain; opacity: 0.8; transition: opacity 0.3s;"
+                         onmouseover="this.style.opacity='1'" 
+                         onmouseout="this.style.opacity='0.8'">
+                    <p class="small text-muted mt-2 mb-0">Coalition for Health AI</p>
+                </div>
+            </div>
+            <div class="text-center mt-4">
+                <div style="display: inline-block; padding: 15px 30px; background: linear-gradient(135deg, rgba(116, 62, 227, 0.05), rgba(0, 145, 225, 0.05)); border-radius: 50px;">
+                    <p class="mb-0" style="font-size: 1.1rem;">
+                        <span style="color: var(--primary-purple);">Built with</span> 
+                        <i class="fas fa-heart" style="color: #e74c3c; animation: pulse 1.5s infinite;"></i> 
+                        <span style="color: var(--primary-purple);">from</span>
+                        <span style="background: linear-gradient(90deg, #FF6B6B, #4ECDC4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 600;">San Francisco Valley</span>
+                        <span style="color: var(--primary-purple);">&</span>
+                        <span style="background: linear-gradient(90deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 600;">Berlin</span>
+                    </p>
                 </div>
             </div>
         </div>
