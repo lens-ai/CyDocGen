@@ -26,12 +26,13 @@ jobs:
 
       - name: Replace Form ID
         run: |
-          # Replace YOUR_FORM_ID placeholder with actual secret
-          sed -i "s/YOUR_FORM_ID/${{ secrets.YOUR_FORM_ID }}/g" index.html
+          # Replace FORMSPREE_ID placeholder with actual secret
+          sed -i "s/FORMSPREE_ID/${{ secrets.FORMSPREE_ID }}/g" index.html
           
           # Verify replacement (for debugging, won't show actual secret)
           echo "Form ID replacement completed"
-          grep -c "formspree.io/f/" index.html || echo "Forms found and updated"
+          echo "Checking forms in index.html..."
+          grep -c "formspree.io/f/" index.html && echo "Forms found and will be updated" || echo "No forms found"
 
       - name: Setup Pages
         uses: actions/configure-pages@v4

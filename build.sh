@@ -17,7 +17,7 @@ mkdir -p build
 cp -r *.html *.md *.yml logos build/ 2>/dev/null || true
 
 # Replace placeholder in the build version
-sed -i.bak "s/YOUR_FORM_ID/$FORMSPREE_ID/g" build/index.html
+sed -i.bak "s/FORMSPREE_ID/$FORMSPREE_ID/g" build/index.html
 
 # Remove backup file
 rm -f build/index.html.bak
