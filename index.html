@@ -66,7 +66,8 @@
         }
 
         .hero-section {
-            padding: 100px 0;
+            padding: 120px 0 100px 0;
+            margin-top: 60px;
             background: linear-gradient(135deg, rgba(116, 62, 227, 0.05), rgba(0, 145, 225, 0.05));
             position: relative;
             overflow: hidden;
@@ -258,6 +259,108 @@
             box-shadow: 0 10px 30px rgba(116, 62, 227, 0.3);
         }
 
+        /* Modern Animations */
+        .feature-card, .partner-card {
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px) rotateX(5deg) scale(1.02);
+        }
+        
+        /* Gradient animations */
+        @keyframes gradient-flow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .btn-primary-custom {
+            background-size: 200% auto;
+            animation: gradient-flow 3s ease infinite;
+        }
+        
+        /* Floating animation variation */
+        @keyframes float-up {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            33% { transform: translateY(-20px) rotate(5deg); }
+            66% { transform: translateY(-10px) rotate(-5deg); }
+        }
+        
+        /* Glow effect on hover */
+        .feature-icon {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .feature-icon:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 0 30px rgba(116, 62, 227, 0.4);
+        }
+        
+        /* Text reveal animation */
+        @keyframes text-reveal {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Ripple effect */
+        .ripple {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ripple::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .ripple:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        /* Parallax depth */
+        .parallax-layer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.1s;
+        }
+        
+        /* Neon glow text */
+        .neon-text {
+            text-shadow: 0 0 10px rgba(116, 62, 227, 0.5),
+                         0 0 20px rgba(116, 62, 227, 0.3),
+                         0 0 30px rgba(116, 62, 227, 0.2);
+        }
+        
+        /* Smooth fade-in */
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .fade-in-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
         @media (max-width: 768px) {
             .hero-section {
                 padding: 50px 0;
@@ -300,7 +403,10 @@
                         <a class="nav-link" href="#documents">Documents</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#example">Example</a>
+                        <a class="nav-link" href="#security">Security</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#partners">Partners</a>
                     </li>
                 </ul>
             </div>
@@ -312,12 +418,12 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-6">
-                    <h1 class="display-4 fw-bold mb-4">Automated Cybersecurity Compliance Documentation</h1>
-                    <p class="lead mb-4">AI-powered documentation generator that transforms your codebase into comprehensive compliance reports in minutes.</p>
+                    <h1 class="display-4 fw-bold mb-4" data-aos="fade-right" data-aos-duration="1000">Automated Cybersecurity Compliance Documentation</h1>
+                    <p class="lead mb-4" data-aos="fade-right" data-aos-delay="200">AI-powered documentation generator that transforms your codebase into comprehensive compliance reports in minutes.</p>
                     <div class="d-flex gap-3 flex-wrap">
-                        <a href="https://github.com/lens-ai/CyDocGen" target="_blank" rel="noopener noreferrer" class="btn-primary-custom">
-                            <i class="fab fa-github me-2"></i>Get Started
-                        </a>
+                        <button type="button" class="btn-primary-custom" data-bs-toggle="modal" data-bs-target="#getStartedModal">
+                            <i class="fas fa-rocket me-2"></i>Get Started Free
+                        </button>
                         <a href="#how-it-works" class="btn-secondary-custom">
                             <i class="fas fa-play-circle me-2"></i>See How It Works
                         </a>
@@ -486,7 +592,7 @@
                 <p class="lead">Enterprise-grade cybersecurity compliance documentation for any regulated industry</p>
             </div>
             <div class="row g-4">
-                <div class="col-md-4">
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
                     <div class="feature-card">
                         <div class="feature-icon">
                             <i class="fas fa-clock"></i>
@@ -886,6 +992,127 @@ on:<br>
         </div>
     </section>
 
+    <!-- Data Security & Compliance Section -->
+    <section id="security" class="py-5" style="background: linear-gradient(135deg, rgba(116, 62, 227, 0.02), rgba(0, 145, 225, 0.02));">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="section-title">Enterprise-Grade Security & Compliance</h2>
+                <p class="lead">Zero data retention policy with complete client control</p>
+            </div>
+            <div class="row g-4 mb-5">
+                <div class="col-lg-4">
+                    <div class="card h-100 border-0" style="background: white; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                        <div class="card-body p-4 text-center">
+                            <div class="feature-icon mx-auto mb-3" style="background: linear-gradient(135deg, #28a745, #20c997);">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <h4>Zero Data Retention</h4>
+                            <p>No data is stored outside your system. All processing happens in ephemeral containers that are destroyed after each run.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card h-100 border-0" style="background: white; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                        <div class="card-body p-4 text-center">
+                            <div class="feature-icon mx-auto mb-3" style="background: linear-gradient(135deg, #007bff, #0056b3);">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                            <h4>Client-Side Processing</h4>
+                            <p>All code analysis and document generation happens within your GitHub Actions environment. Data never leaves your control.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card h-100 border-0" style="background: white; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                        <div class="card-body p-4 text-center">
+                            <div class="feature-icon mx-auto mb-3" style="background: linear-gradient(135deg, #6610f2, #6f42c1);">
+                                <i class="fas fa-user-shield"></i>
+                            </div>
+                            <h4>Compliance First</h4>
+                            <p>Our infrastructure partners comply with strict guidelines. No training on customer data, SOC2 compliant infrastructure.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="alert alert-info" style="background: linear-gradient(135deg, rgba(116, 62, 227, 0.1), rgba(0, 145, 225, 0.1)); border: 2px solid var(--primary-purple); border-radius: 15px;">
+                <div class="row align-items-center">
+                    <div class="col-md-1 text-center">
+                        <i class="fas fa-info-circle" style="font-size: 2rem; color: var(--primary-purple);"></i>
+                    </div>
+                    <div class="col-md-11">
+                        <h5 class="mb-2">How We Protect Your Data</h5>
+                        <ul class="mb-0">
+                            <li><strong>No Persistent Storage:</strong> LLM interactions are stateless with no conversation history retained</li>
+                            <li><strong>Ephemeral Processing:</strong> Docker containers are destroyed immediately after document generation</li>
+                            <li><strong>Your Infrastructure:</strong> All processing happens in your GitHub Actions runners</li>
+                            <li><strong>API-Only Integration:</strong> Only API calls to LLM for text generation, no data storage</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Partners Section -->
+    <section id="partners" class="py-5">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="section-title">Trusted Technology Partners</h2>
+                <p class="lead">Powered by industry-leading AI infrastructure providers with enterprise compliance</p>
+            </div>
+            <div class="row g-4 align-items-center justify-content-center">
+                <div class="col-md-4 text-center">
+                    <div class="partner-card p-4" data-aos="fade-up" data-aos-delay="100" style="background: white; border-radius: 15px; height: 200px; display: flex; flex-direction: column; justify-content: center; box-shadow: 0 5px 20px rgba(0,0,0,0.1); transition: all 0.3s;">
+                        <!-- Baseten Logo -->
+                        <div style="height: 60px; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+                            <img src="logos/baseten.jpg" 
+                                 alt="Baseten" 
+                                 style="max-height: 60px; max-width: 180px; object-fit: contain;">
+                        </div>
+                        <p class="small text-muted mb-2">SOC2 Type II Compliant</p>
+                        <p class="small">Zero data retention • HIPAA eligible • Enterprise security</p>
+                    </div>
+                </div>
+                <div class="col-md-4 text-center">
+                    <div class="partner-card p-4" data-aos="fade-up" data-aos-delay="200" style="background: white; border-radius: 15px; height: 200px; display: flex; flex-direction: column; justify-content: center; box-shadow: 0 5px 20px rgba(0,0,0,0.1); transition: all 0.3s;">
+                        <!-- Nebius Logo -->
+                        <div style="height: 60px; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+                            <img src="logos/nebius.png" 
+                                 alt="Nebius" 
+                                 style="max-height: 60px; max-width: 180px; object-fit: contain;">
+                        </div>
+                        <p class="small text-muted mb-2">ISO 27001 Certified</p>
+                        <p class="small">European data sovereignty • GDPR compliant • Zero retention</p>
+                    </div>
+                </div>
+                <div class="col-md-4 text-center">
+                    <div class="partner-card p-4" data-aos="fade-up" data-aos-delay="300" style="background: white; border-radius: 15px; height: 200px; display: flex; flex-direction: column; justify-content: center; box-shadow: 0 5px 20px rgba(0,0,0,0.1); transition: all 0.3s;">
+                        <!-- NVIDIA Logo -->
+                        <div style="height: 60px; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+                            <img src="logos/nvidia-inception-logo.png" 
+                                 alt="NVIDIA Inception Program" 
+                                 style="max-height: 60px; max-width: 180px; object-fit: contain;">
+                        </div>
+                        <p class="small text-muted mb-2">AI Infrastructure Partner</p>
+                        <p class="small">Enterprise GPU • Secure AI • Healthcare ready</p>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-5">
+                <div class="badge-custom" style="display: inline-block; padding: 1rem 2rem;">
+                    <i class="fas fa-check-circle me-2"></i>All partners maintain zero data retention policies for API interactions
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <style>
+        .partner-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(116, 62, 227, 0.2) !important;
+        }
+    </style>
+
     <!-- Example Section -->
     <section id="example" class="py-5" style="background: linear-gradient(135deg, rgba(116, 62, 227, 0.02), rgba(0, 145, 225, 0.02));">
         <div class="container">
@@ -944,11 +1171,11 @@ on:<br>
                 <h2 class="mb-4">Ready to Automate Your Compliance Documentation?</h2>
                 <p class="lead mb-4">Join leading companies across healthcare, finance, and automotive sectors using CyDocGen</p>
                 <div class="d-flex gap-3 justify-content-center flex-wrap">
-                    <a href="https://github.com/lens-ai/cydocgen" class="btn-primary-custom">
-                        <i class="fab fa-github me-2"></i>Get Started on GitHub
-                    </a>
-                    <a href="https://www.lensai.tech/cydocgen" class="btn-secondary-custom">
-                        <i class="fas fa-key me-2"></i>Get API Key
+                    <button type="button" class="btn-primary-custom" data-bs-toggle="modal" data-bs-target="#getStartedModal">
+                        <i class="fas fa-rocket me-2"></i>Get Started Free
+                    </button>
+                    <a href="https://github.com/lens-ai/CyDocGen" target="_blank" rel="noopener noreferrer" class="btn-secondary-custom">
+                        <i class="fab fa-github me-2"></i>View on GitHub
                     </a>
                 </div>
             </div>
@@ -987,10 +1214,67 @@ on:<br>
         </div>
     </footer>
 
+    <!-- Get Started Modal -->
+    <div class="modal fade" id="getStartedModal" tabindex="-1" aria-labelledby="getStartedModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="border-radius: 20px; border: none;">
+                <div class="modal-header" style="background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end)); border-radius: 20px 20px 0 0; border: none;">
+                    <h5 class="modal-title text-white" id="getStartedModalLabel">
+                        <i class="fas fa-rocket me-2"></i>Get Started with CyDocGen
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <p class="mb-4">Please share your official work email so our team can get back to you with the API key for you to generate the Cybersecurity Docs.</p>
+                    <form id="emailCaptureForm" action="https://formspree.io/f/xdklboaj" method="POST">
+                        <div class="mb-4">
+                            <label for="workEmail" class="form-label">Work Email <span class="text-danger">*</span></label>
+                            <input type="email" class="form-control form-control-lg" id="workEmail" name="email" placeholder="you@company.com" required style="border-radius: 10px;">
+                            <div class="form-text">We'll send your API key and setup instructions to this email.</div>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn-primary-custom" style="border-radius: 10px; padding: 1rem;">
+                                <i class="fas fa-paper-plane me-2"></i>Get Free API Key
+                            </button>
+                        </div>
+                        <p class="text-center text-muted small mt-3 mb-0">
+                            <i class="fas fa-lock me-1"></i>We respect your privacy. No spam, ever.
+                        </p>
+                    </form>
+                    <div id="formSuccess" class="d-none">
+                        <div class="text-center py-4">
+                            <i class="fas fa-check-circle text-success" style="font-size: 3rem;"></i>
+                            <h5 class="mt-3">Thank You!</h5>
+                            <p>Check your email for your API key and setup instructions.</p>
+                            <a href="https://github.com/lens-ai/CyDocGen" target="_blank" class="btn-primary-custom">
+                                <i class="fab fa-github me-2"></i>Go to GitHub Repository
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
-    <!-- Smooth Scrolling -->
+    <!-- AOS Animation Library -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    
+    <!-- Enhanced Animations -->
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-out-cubic',
+            once: false,
+            offset: 50
+        });
+    </script>
+    
+    <!-- Smooth Scrolling and Interactions -->
     <script>
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
@@ -1025,6 +1309,22 @@ on:<br>
             el.style.transform = 'translateY(20px)';
             el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
             observer.observe(el);
+        });
+
+        // Email form submission handler
+        document.getElementById('emailCaptureForm').addEventListener('submit', function(e) {
+            // Let Formspree handle the submission
+            // Show loading state on button
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Sending...';
+            submitBtn.disabled = true;
+            
+            // After submission, show success (Formspree will handle the actual sending)
+            setTimeout(() => {
+                document.getElementById('emailCaptureForm').style.display = 'none';
+                document.getElementById('formSuccess').classList.remove('d-none');
+            }, 1500);
         });
     </script>
 </body>
