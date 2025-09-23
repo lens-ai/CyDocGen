@@ -1,16 +1,18 @@
-# 🏥 FDA Cybersecurity Documentation Generator - Client Workflow
-# Copy this file to .github/workflows/fda-docs.yml in your repository
+# 📋 Compliance Documentation Generator - Multi-Sector Client Workflow
+# Copy this file to .github/workflows/compliance-docs.yml in your repository
 # Then add required secrets to your repository settings
+# Supports: Healthcare (FDA), Financial, Automotive, Aerospace, Industrial
 
-name: 🏥 Generate FDA Documentation
+name: 📋 Generate Compliance Documentation
 
 on:
+  # Manual trigger - for ad-hoc documentation generation
   workflow_dispatch:
     inputs:
       device_name:
-        description: 'Your Medical Device Name'
+        description: 'Your Product/System Name'
         required: true
-        default: 'My Medical Device'
+        default: 'My Product'
       device_manufacturer:
         description: 'Your Company Name'
         required: true
@@ -27,17 +29,29 @@ on:
         options:
           - full
           - incremental
+      publish_to_confluence:
+        description: 'Publish to Confluence'
+        required: false
+        type: boolean
+        default: false
+
+  # Automatic trigger - on release tags
+  push:
+    tags:
+      - 'v*'
+      - 'release-*'
+      - '*.*.*'
 
 jobs:
-  generate-fda-docs:
-    name: 🏥 Generate FDA Documents
+  generate-compliance-docs:
+    name: 📋 Generate Compliance Documents
     runs-on: ubuntu-latest
     permissions:
       contents: read        # Read repository contents
       issues: read          # Read issues
       pull-requests: read   # Read pull requests
       security-events: read # Read security advisories
-    
+
     steps:
     - name: 📋 Checkout Repository
       uses: actions/checkout@v4
@@ -45,42 +59,51 @@ jobs:
     - name: 🐳 Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
 
-    - name: 📦 Pull FDA Generator and Tools
+    - name: 📦 Pull Compliance Generator
       run: |
-        # Define FDA generator version (pin to specific version for stability)
-        # Options: 
+        # Define generator version (pin to specific version for stability)
+        # Options:
         #   - Specific version: 1.2.3
         #   - Minor version: 1.2 (auto-updates patch versions)
         #   - Major version: 1 (auto-updates minor & patch)
         #   - Latest: latest (always newest, less stable)
-        FDA_VERSION="${{ vars.FDA_GENERATOR_VERSION || '1' }}"  # Default to major version 1
-        
-        echo "📦 Pulling FDA Generator container (version: ${FDA_VERSION})..."
-        if docker pull lensai/lensai-fda-cybersecurity:${FDA_VERSION}; then
-          echo "✅ Using FDA Generator version: ${FDA_VERSION}"
+        GENERATOR_VERSION="${{ vars.GENERATOR_VERSION || '2' }}"  # Default to major version 2
+
+        echo "📦 Pulling Compliance Generator container (version: ${GENERATOR_VERSION})..."
+        if docker pull lensai/lensai-fda-cybersecurity:${GENERATOR_VERSION}; then
+          echo "✅ Using Compliance Generator version: ${GENERATOR_VERSION}"
           # Tag it as 'latest' locally for consistency
-          docker tag lensai/lensai-fda-cybersecurity:${FDA_VERSION} lensai/lensai-fda-cybersecurity:latest
+          docker tag lensai/lensai-fda-cybersecurity:${GENERATOR_VERSION} lensai/lensai-fda-cybersecurity:latest
         else
-          echo "⚠️ Version ${FDA_VERSION} not found, falling back to latest..."
+          echo "⚠️ Version ${GENERATOR_VERSION} not found, falling back to latest..."
           docker pull lensai/lensai-fda-cybersecurity:latest
         fi
-        
-        echo "📦 Pulling official MCP containers from Docker Hub..."
-        docker pull mcp/github:latest
-        docker pull mcp/atlassian:latest
-        
-        echo "📦 Verifying MCP containers..."
-        docker images | grep mcp/ || (echo "❌ MCP containers not found!" && exit 1)
-        
-        echo "📦 Pulling SBOM generation tools..."
-        docker pull anchore/syft:latest
-        docker pull anchore/grype:latest
-        
-        echo "✅ All containers ready!"
 
-    - name: 🏥 Generate FDA Documentation
+        echo "✅ Container ready!"
+
+    - name: 📋 Generate Compliance Documentation
       env:
-        # Set all environment variables in the shell first
+        # ============================================================
+        # SECTOR CONFIGURATION (NEW!)
+        # ============================================================
+        SECTOR: ${{ vars.SECTOR || 'healthcare' }}  # healthcare, financial, automotive, aerospace, industrial
+
+        # ============================================================
+        # HEALTHCARE-SPECIFIC VARIABLES (Optional)
+        # Set as repository variables for enhanced FDA documentation
+        # ============================================================
+        DEVICE_CLASS: ${{ vars.DEVICE_CLASS || '' }}  # FDA Class: I, II, or III
+        INTENDED_USE: ${{ vars.INTENDED_USE || '' }}  # Clinical purpose of device
+        PATIENT_POPULATION: ${{ vars.PATIENT_POPULATION || '' }}  # Target patient demographics
+        CLINICAL_ENVIRONMENT: ${{ vars.CLINICAL_ENVIRONMENT || '' }}  # Hospital, ICU, home, etc.
+        SAMD_CATEGORY: ${{ vars.SAMD_CATEGORY || '' }}  # Software as Medical Device: CLASS_I to CLASS_IV
+        HEALTHCARE_SYSTEMS: ${{ vars.HEALTHCARE_SYSTEMS || '' }}  # Integration: HL7,FHIR,DICOM,EHR
+        MULTI_PATIENT_CAPABLE: ${{ vars.MULTI_PATIENT_CAPABLE || '' }}  # true/false
+        REGULATORY_SUBMISSION_TYPE: ${{ vars.REGULATORY_SUBMISSION_TYPE || '' }}  # 510(k), PMA, De Novo
+
+        # ============================================================
+        # CORE CONFIGURATION
+        # ============================================================
         LENSAI_API_KEY: ${{ secrets.LENSAI_API_KEY }}
         LENSAI_MODEL: "deepseek-ai/DeepSeek-V3-0324"
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -88,7 +111,10 @@ jobs:
         DEVICE_NAME: ${{ github.event.inputs.device_name }}
         DEVICE_VERSION: ${{ github.event.inputs.device_version }}
         DEVICE_MANUFACTURER: ${{ github.event.inputs.device_manufacturer }}
-        # Atlassian Integration (OPTIONAL - will work without these)
+
+        # ============================================================
+        # ATLASSIAN INTEGRATION (OPTIONAL)
+        # ============================================================
         JIRA_URL: ${{ secrets.JIRA_URL }}
         JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
         JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
@@ -97,39 +123,69 @@ jobs:
         CONFLUENCE_EMAIL: ${{ secrets.CONFLUENCE_EMAIL }}
         CONFLUENCE_API_TOKEN: ${{ secrets.CONFLUENCE_API_TOKEN }}
         CONFLUENCE_SPACE_KEY: ${{ secrets.CONFLUENCE_SPACE_KEY }}
+
+        # ============================================================
+        # FEATURE CONFIGURATION
+        # ============================================================
+        # Confluence Publishing (auto-publishes if credentials configured)
+        CONFLUENCE_PUBLISH: ${{ github.event.inputs.publish_to_confluence == 'true' && 'true' || 'auto' }}
+
+        # Patch Generation (automatically generates fixes for vulnerabilities)
+        ENABLE_PATCH_GENERATION: "true"
+
         # JIRA Time Windows
         JIRA_RECENT_DAYS: "90"
         JIRA_SECURITY_DAYS: "180"
         JIRA_DEFAULT_DAYS: "60"
-        # FDA Evidence Requirements
-        FDA_MIN_GITHUB_COMMITS: "3"
+
+        # Evidence Processing (Batched - no minimums required)
+        # The system intelligently handles whatever evidence is available
+        FDA_MIN_GITHUB_COMMITS: "0"
         FDA_MIN_SEMGREP_FINDINGS: "0"
         FDA_MIN_JIRA_TICKETS: "0"
         FDA_MIN_CONFLUENCE_PAGES: "0"
-        FDA_MIN_SBOM_COMPONENTS: "5"
+        FDA_MIN_SBOM_COMPONENTS: "0"
+
         # Generation settings
         OUTPUT_DIR: "/output"
         GENERATION_MODE: "${{ github.event.inputs.output_format || 'full' }}"
         OUTPUT_FORMAT: "markdown"
+
+        # Evidence optimization
+        FDA_MAX_CODE_EVIDENCE_CHARS: "200000"  # Preserve more code context
+
       run: |
-        echo "🚀 Starting FDA documentation generation..."
+        echo "🚀 Starting compliance documentation generation..."
         echo "📊 Analyzing repository: ${{ github.repository }}"
-        echo "🏥 Device: ${{ github.event.inputs.device_name }} v${{ github.event.inputs.device_version }}"
-        
+        echo "🏢 Sector: ${SECTOR}"
+        echo "📦 Product: ${{ github.event.inputs.device_name }} v${{ github.event.inputs.device_version }}"
+
+        # Show healthcare-specific configuration if applicable
+        if [ "${SECTOR}" = "healthcare" ]; then
+          echo "🏥 Healthcare Configuration:"
+          [ -n "${DEVICE_CLASS}" ] && echo "  - FDA Device Class: ${DEVICE_CLASS}"
+          [ -n "${INTENDED_USE}" ] && echo "  - Intended Use: ${INTENDED_USE}"
+          [ -n "${SAMD_CATEGORY}" ] && echo "  - SaMD Category: ${SAMD_CATEGORY}"
+          [ -n "${REGULATORY_SUBMISSION_TYPE}" ] && echo "  - Submission Type: ${REGULATORY_SUBMISSION_TYPE}"
+        fi
+
         # Create output directory
-        mkdir -p ./fda-output
-        
-        # Note: Using pre-built container from Docker Hub
-        # Make sure lensai/lensai-fda-cybersecurity:latest is up to date
-        # Container includes MCP Direct Docker client for spawning MCP containers
-        
+        mkdir -p ./compliance-output
+
         # Record start time
         START_TIME=$(date +%s)
-        
-        # Run FDA documentation generator with MCP Docker spawn mode
-        # The container will spawn MCP containers internally if available
-        # Note: Using environment variables from the shell (set in env: above)
+
+        # Run compliance documentation generator
         docker run --rm \
+          -e SECTOR \
+          -e DEVICE_CLASS \
+          -e INTENDED_USE \
+          -e PATIENT_POPULATION \
+          -e CLINICAL_ENVIRONMENT \
+          -e SAMD_CATEGORY \
+          -e HEALTHCARE_SYSTEMS \
+          -e MULTI_PATIENT_CAPABLE \
+          -e REGULATORY_SUBMISSION_TYPE \
           -e LENSAI_API_KEY \
           -e LENSAI_MODEL \
           -e GITHUB_TOKEN \
@@ -145,6 +201,8 @@ jobs:
           -e CONFLUENCE_EMAIL \
           -e CONFLUENCE_API_TOKEN \
           -e CONFLUENCE_SPACE_KEY \
+          -e CONFLUENCE_PUBLISH \
+          -e ENABLE_PATCH_GENERATION \
           -e JIRA_RECENT_DAYS \
           -e JIRA_SECURITY_DAYS \
           -e JIRA_DEFAULT_DAYS \
@@ -156,19 +214,20 @@ jobs:
           -e OUTPUT_DIR \
           -e GENERATION_MODE \
           -e OUTPUT_FORMAT \
+          -e FDA_MAX_CODE_EVIDENCE_CHARS \
           -v /var/run/docker.sock:/var/run/docker.sock \
           -v ${{ github.workspace }}:/repo:ro \
-          -v ${{ github.workspace }}/fda-output:/output \
+          -v ${{ github.workspace }}/compliance-output:/output \
           lensai/lensai-fda-cybersecurity:latest \
           python -m src.main --mode ${{ github.event.inputs.output_format }} --output-dir /output
-        
+
         # Calculate generation time
         END_TIME=$(date +%s)
         DURATION=$((END_TIME - START_TIME))
-        
+
         # Count generated documents
-        DOC_COUNT=$(find ./fda-output -name "*.md" -type f | wc -l)
-        
+        DOC_COUNT=$(find ./compliance-output -name "*.md" -type f | wc -l)
+
         # Calculate success rate
         if [ "${{ github.event.inputs.output_format }}" = "full" ]; then
           TOTAL_DOCS=11
@@ -176,42 +235,69 @@ jobs:
           TOTAL_DOCS=6  # Essential documents only
         fi
         SUCCESS_RATE=$(( (DOC_COUNT * 100) / TOTAL_DOCS ))
-        
+
         echo "📊 GENERATION RESULTS:"
+        echo "   Sector: ${SECTOR}"
         echo "   Documents Generated: $DOC_COUNT/$TOTAL_DOCS ($SUCCESS_RATE%)"
         echo "   Generation Time: ${DURATION}s"
-        echo "   Output Directory: ./fda-output/"
-        
-        echo "📄 Generated FDA Documents:"
-        find ./fda-output -name "*.md" -type f -exec basename {} \; | sort
-    
-    - name: 📊 Upload FDA Documents
+        echo "   Output Directory: ./compliance-output/"
+
+        echo "📄 Generated Compliance Documents:"
+        find ./compliance-output -name "*.md" -type f -exec basename {} \; | sort
+
+    - name: 📊 Upload Compliance Documents
       uses: actions/upload-artifact@v4
       with:
-        name: fda-cybersecurity-docs-${{ github.run_id }}
-        path: ./fda-output/
+        name: compliance-docs-${{ github.run_id }}
+        path: ./compliance-output/
         retention-days: 30
         if-no-files-found: error
-    
+
     - name: 📋 Summary
       run: |
-        echo "## 🏥 FDA Documentation Generated" >> $GITHUB_STEP_SUMMARY
+        echo "## 📋 Compliance Documentation Generated" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "### ✅ Success!" >> $GITHUB_STEP_SUMMARY
-        echo "- **Device**: ${{ github.event.inputs.device_name }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Sector**: ${SECTOR}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Product**: ${{ github.event.inputs.device_name }}" >> $GITHUB_STEP_SUMMARY
         echo "- **Manufacturer**: ${{ github.event.inputs.device_manufacturer }}" >> $GITHUB_STEP_SUMMARY
         echo "- **Version**: ${{ github.event.inputs.device_version }}" >> $GITHUB_STEP_SUMMARY
         echo "- **Format**: ${{ github.event.inputs.output_format }}" >> $GITHUB_STEP_SUMMARY
-        echo "- **Documents**: $(find ./fda-output -name "*.md" -type f | wc -l)" >> $GITHUB_STEP_SUMMARY
+        echo "- **Documents**: $(find ./compliance-output -name "*.md" -type f | wc -l)" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "### 📄 Generated Files:" >> $GITHUB_STEP_SUMMARY
-        find ./fda-output -name "*.md" -type f -exec basename {} \; | sort | sed 's/^/- ✅ /' >> $GITHUB_STEP_SUMMARY
+        find ./compliance-output -name "*.md" -type f -exec basename {} \; | sort | sed 's/^/- ✅ /' >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
-        echo "Download the artifacts above to get your FDA cybersecurity documentation!" >> $GITHUB_STEP_SUMMARY
+        echo "Download the artifacts above to get your compliance documentation!" >> $GITHUB_STEP_SUMMARY
 
-# === CONFIGURATION NOTES ===
+# ============================================================
+# CONFIGURATION NOTES
+# ============================================================
 #
-# ENVIRONMENT VARIABLES (NEW!):
+# SECTOR CONFIGURATION:
+# Set the SECTOR repository variable to choose your compliance framework:
+# - healthcare: FDA 524B, ISO 14971, IEC 81001-5-1 (default)
+# - financial: SOX, MiFID II, PCI-DSS (planned)
+# - automotive: ISO 26262, ASIL-D (planned)
+# - aerospace: DO-178C, DO-254 (planned)
+# - industrial: IEC 62443, NIST CSF (planned)
+#
+# To set: Go to Settings → Secrets and variables → Actions → Variables
+# Add variable: SECTOR = your_sector
+#
+# HEALTHCARE-SPECIFIC VARIABLES:
+# For medical devices, set these repository variables for enhanced documentation:
+# - DEVICE_CLASS: FDA device classification (I, II, or III)
+# - INTENDED_USE: Clinical purpose and use case
+# - PATIENT_POPULATION: Target patient demographics
+# - CLINICAL_ENVIRONMENT: Deployment setting (hospital, home, etc.)
+# - SAMD_CATEGORY: Software as Medical Device level (CLASS_I to CLASS_IV)
+# - HEALTHCARE_SYSTEMS: Integration systems (HL7,FHIR,DICOM,EHR)
+# - REGULATORY_SUBMISSION_TYPE: FDA submission type (510(k), PMA, De Novo)
+#
+# See docs/SECTOR_CONFIGURATION.md for complete configuration guide
+#
+# ENVIRONMENT VARIABLES:
 # The following environment variables can be adjusted based on your needs:
 #
 # JIRA Time Windows:
@@ -219,12 +305,29 @@ jobs:
 # - JIRA_SECURITY_DAYS: Days to look back for security issues (default: 60, example uses 180)
 # - JIRA_DEFAULT_DAYS: Default time window (default: 30, example uses 60)
 #
-# FDA Evidence Requirements:
-# - FDA_MIN_GITHUB_COMMITS: Minimum GitHub commits required (default: 3)
-# - FDA_MIN_SEMGREP_FINDINGS: Minimum Semgrep findings (default: 0 = optional)
-# - FDA_MIN_JIRA_TICKETS: Minimum JIRA tickets (default: 1, example uses 0 = optional)
-# - FDA_MIN_CONFLUENCE_PAGES: Minimum Confluence pages (default: 0 = optional)
-# - FDA_MIN_SBOM_COMPONENTS: Minimum SBOM components (default: 10)
+# Evidence Processing:
+# The system uses intelligent batched evidence processing that automatically
+# compacts and summarizes all available data. No minimum requirements needed.
+# Legacy FDA_MIN_* variables are kept at 0 for backward compatibility.
+#
+# Evidence Optimization:
+# - FDA_MAX_CODE_EVIDENCE_CHARS: Maximum characters of code evidence to include (default: 200000)
+#
+# Confluence Publishing:
+# - CONFLUENCE_URL: Your Confluence instance URL (e.g., https://company.atlassian.net/wiki)
+# - CONFLUENCE_EMAIL: Your Confluence email address
+# - CONFLUENCE_API_TOKEN: Your Confluence API token
+# - CONFLUENCE_SPACE_KEY: Target Confluence space key (e.g., FDA)
+# - CONFLUENCE_PUBLISH: Enable/disable publishing (auto/true/false)
+#
+# WORKFLOW TRIGGERS:
+# This client workflow is designed for:
+# 1. Manual execution with version input
+# 2. Automatic execution on release tags (v*, release-*, *.*.*)
+#
+# Version Detection:
+# - Release tags: Automatically uses tag name as version
+# - Manual runs: Uses device_version input or defaults to 1.0.0
 #
 # Adjust these values based on your project's maturity and activity level.
-# For new projects with limited history, consider setting lower minimums.
+# For new projects with limited history, consider using the defaults.
