@@ -48,7 +48,7 @@ For healthcare/FDA compliance, you can add these optional variables for more acc
 1. Go to your repository `Settings → Secrets and variables → Actions`
 2. Add a new repository secret:
    - **Name**: `LENSAI_API_KEY`
-   - **Value**: Your LensAI API key ([Get one here](https://app.baseten.co/))
+   - **Value**: Your LensAI API key ([Get one here](https://cydocgen.lensai.tech/))
 
 ### Step 5: Generate Documentation
 
@@ -197,7 +197,7 @@ Set these as repository variables (Settings → Secrets and variables → Action
 
 ### ❌ "LENSAI_API_KEY is required"
 - Make sure you added the secret with the exact name `LENSAI_API_KEY`
-- Verify the API key is valid at https://app.baseten.co/
+- Verify the API key is valid at https://cydocgen.lensai.tech/
 
 ### ❌ "No documents generated"
 - Check the workflow logs for specific error messages
