@@ -1,4 +1,6 @@
-# 🏥 Compliance Documentation Generator v2.0 - Multi-Sector Setup Guide
+# 🏥 CyberSecurity Compliance Documentation Generator 
+
+## Multi-Sector Setup Guide
 
 ## Quick Setup (3 minutes)
 
@@ -216,5 +218,3 @@ Set these as repository variables (Settings → Secrets and variables → Action
 - **Examples**: Check the `/examples` directory for more templates
 
 ---
-
-**Ready to generate your FDA cybersecurity documentation?** 🚀
