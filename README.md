@@ -128,7 +128,7 @@ If you use Jira and Confluence, add these secrets for even richer documentation:
 
 ## What You Get
 
-### ✅ All 11 FDA-Required Documents:
+### ✅ All 11 Required Documents:
 1. **Risk Assessment** - Dual-framework analysis (ISO 14971 + NIST)
 2. **Threat Model** - STRIDE-based threat analysis with mitigation strategies
 3. **Architecture Document** - 4 FDA-required views (Global, Multi-Patient, Updateability, Security)
