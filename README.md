@@ -127,7 +127,7 @@ If you use Jira and Confluence, add these secrets for even richer documentation:
 
 ## What You Get
 
-### ✅ All 11 FDA-Required Documents:
+### ✅ All 11 Cybersecurity  Documents:
 1. **Risk Assessment** - Dual-framework analysis (ISO 14971 + NIST)
 2. **Threat Model** - STRIDE-based threat analysis with mitigation strategies
 3. **Architecture Document** - 4 FDA-required views (Global, Multi-Patient, Updateability, Security)
@@ -254,7 +254,7 @@ The patch branch system includes built-in protections:
 
 ## Support
 
-- **Issues**: [GitHub Issues](https://github.com/lens-ai/lensai-fda-cybersecurity/issues)
+- **Issues**: [GitHub Issues](https://github.com/lens-ai/CyDocGen/issues)
 - **Documentation**: See README.md in the main repository
 - **Examples**: Check the `/examples` directory for more templates
 
