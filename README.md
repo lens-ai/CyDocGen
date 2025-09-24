@@ -1,5 +1,4 @@
-# 🏥 CyberSecurity Compliance Documentation Generator 
-
+# Automated Security Fixes & Compliance Documentation
 ## Multi-Sector Setup Guide
 
 ## Quick Setup (3 minutes)
