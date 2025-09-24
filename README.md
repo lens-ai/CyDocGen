@@ -33,7 +33,7 @@ Add a new repository variable:
 - **Value**: `healthcare` (or `financial`, `automotive`, etc.)
 
 > **Note**: If not set, defaults to `healthcare` for FDA compliance
-> **📚 See [Sector Configuration Guide](../SECTOR_CONFIGURATION.md) for detailed sector-specific setup**
+> **📚 See [Sector Configuration Guide](https://github.com/lens-ai/CyDocGen/blob/main/SECTOR_CONFIGURATION.md) for detailed sector-specific setup**
 
 #### Healthcare-Specific Variables (Optional)
 For healthcare/FDA compliance, you can add these optional variables for more accurate documentation:
