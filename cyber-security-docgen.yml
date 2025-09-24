@@ -34,6 +34,20 @@ on:
         required: false
         type: boolean
         default: false
+      create_patch_branch:
+        description: 'Create patch branch with security fixes'
+        required: false
+        type: boolean
+        default: true
+      create_pr:
+        description: 'Create GitHub PR for patches'
+        required: false
+        type: boolean
+        default: false
+      base_branch:
+        description: 'Base branch for patch branch'
+        required: false
+        default: 'main'
 
   # Automatic trigger - on release tags
   push:
@@ -47,9 +61,9 @@ jobs:
     name: 📋 Generate Compliance Documents
     runs-on: ubuntu-latest
     permissions:
-      contents: read        # Read repository contents
+      contents: write       # Write for patch branch creation
       issues: read          # Read issues
-      pull-requests: read   # Read pull requests
+      pull-requests: write  # Write for creating patch PRs
       security-events: read # Read security advisories
 
     steps:
@@ -108,6 +122,8 @@ jobs:
         LENSAI_MODEL: "deepseek-ai/DeepSeek-V3-0324"
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         GITHUB_REPO: ${{ github.repository }}
+        GITHUB_REPO_OWNER: ${{ github.repository_owner }}
+        GITHUB_REPO_NAME: ${{ github.event.repository.name }}
         DEVICE_NAME: ${{ github.event.inputs.device_name }}
         DEVICE_VERSION: ${{ github.event.inputs.device_version }}
         DEVICE_MANUFACTURER: ${{ github.event.inputs.device_manufacturer }}
@@ -175,6 +191,17 @@ jobs:
         # Record start time
         START_TIME=$(date +%s)
 
+        # Build patch branch command arguments
+        PATCH_ARGS=""
+        if [ "${{ github.event.inputs.create_patch_branch }}" = "true" ]; then
+          PATCH_ARGS="--create-patch-branch"
+          if [ "${{ github.event.inputs.create_pr }}" = "true" ]; then
+            PATCH_ARGS="$PATCH_ARGS --create-pr"
+          fi
+          PATCH_ARGS="$PATCH_ARGS --base-branch ${{ github.event.inputs.base_branch }}"
+          echo "🔧 Patch branch options: $PATCH_ARGS"
+        fi
+
         # Run compliance documentation generator
         docker run --rm \
           -e SECTOR \
@@ -190,6 +217,8 @@ jobs:
           -e LENSAI_MODEL \
           -e GITHUB_TOKEN \
           -e GITHUB_REPO \
+          -e GITHUB_REPO_OWNER \
+          -e GITHUB_REPO_NAME \
           -e DEVICE_NAME \
           -e DEVICE_VERSION \
           -e DEVICE_MANUFACTURER \
@@ -219,7 +248,7 @@ jobs:
           -v ${{ github.workspace }}:/repo:ro \
           -v ${{ github.workspace }}/compliance-output:/output \
           lensai/lensai-fda-cybersecurity:latest \
-          python -m src.main --mode ${{ github.event.inputs.output_format }} --output-dir /output
+          python -m src.main --mode ${{ github.event.inputs.output_format }} --output-dir /output $PATCH_ARGS
 
         # Calculate generation time
         END_TIME=$(date +%s)
@@ -319,6 +348,32 @@ jobs:
 # - CONFLUENCE_API_TOKEN: Your Confluence API token
 # - CONFLUENCE_SPACE_KEY: Target Confluence space key (e.g., FDA)
 # - CONFLUENCE_PUBLISH: Enable/disable publishing (auto/true/false)
+#
+# GITHUB PATCH BRANCHES (NEW!):
+# The system can automatically create patch branches with security fixes:
+# - create_patch_branch: Creates patch branches (default: true)
+# - create_pr: Creates GitHub PRs for patches (default: false)
+# - base_branch: Base branch for patches (default: main)
+#
+# Patch Branch Features:
+# - Automatically generates security fixes for detected vulnerabilities
+# - Creates descriptive git branches with security patches
+# - Can create GitHub PRs with detailed descriptions and confidence levels
+# - Supports HIGH/MEDIUM/LOW confidence patches with appropriate review workflows
+# - Works with any base branch (main, develop, feature branches)
+#
+# Required GitHub Permissions:
+# - contents: write (for creating branches)
+# - pull-requests: write (for creating PRs)
+# - This workflow already has the correct permissions configured
+#
+# Branch Protection:
+# The system includes built-in protections for safe operation:
+# - Never directly modifies protected branches (main, master, develop, release, production, prod)
+# - Always creates new branches from the specified base branch
+# - Validates that base branch exists before proceeding
+# - Uses descriptive branch names with timestamps to prevent collisions
+# - LOW confidence patches create draft PRs requiring manual review
 #
 # WORKFLOW TRIGGERS:
 # This client workflow is designed for:

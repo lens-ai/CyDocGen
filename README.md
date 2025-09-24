@@ -128,18 +128,18 @@ If you use Jira and Confluence, add these secrets for even richer documentation:
 
 ## What You Get
 
-### ✅ All 11 Required Documents:
+### ✅ All 11 FDA-Required Documents:
 1. **Risk Assessment** - Dual-framework analysis (ISO 14971 + NIST)
 2. **Threat Model** - STRIDE-based threat analysis with mitigation strategies
 3. **Architecture Document** - 4 FDA-required views (Global, Multi-Patient, Updateability, Security)
 4. **Security Controls** - NIST 800-53 control implementation
-5. **Vulnerability Management** - Tracking with **automated patch generation**
+5. **Vulnerability Management** - Tracking with **automated patch generation & GitHub PR creation**
 6. **Incident Response Plan** - FDA-compliant incident handling procedures
 7. **Penetration Test Report** - Security testing results and findings
 8. **Security Updates & Postmarket** - Surveillance and update management
 9. **SBOM** - Complete Software Bill of Materials (CycloneDX/SPDX format)
 10. **Traceability Matrix** - Requirements to implementation mapping
-11. **Action Plan** - Phased implementation roadmap with **actionable patches**
+11. **Action Plan** - Phased implementation roadmap with **automated patch branches & PRs**
 
 ### ✅ Rich Data Sources:
 - **GitHub**: Commits, issues, PRs, vulnerabilities, releases
@@ -152,7 +152,7 @@ If you use Jira and Confluence, add these secrets for even richer documentation:
 - **Release-Based Automation**: Automatically generates docs when you tag releases
 - **Manual Control**: Run documentation generation on-demand
 - **Confluence Integration**: Auto-publishes when credentials configured
-- **Automated Patch Generation**: Creates code fixes with confidence levels (HIGH/MEDIUM/LOW)
+- **Automated Patch Branches**: Creates code fixes with confidence levels (HIGH/MEDIUM/LOW) in GitHub branches & PRs
 - **Intelligent Evidence Processing**: No minimum requirements - works with any project size
 - **Secure Environment**: Runs in GitHub Actions, no data stored externally
 - **Professional Output**: FDA-submission ready documents with cross-references
@@ -162,14 +162,29 @@ If you use Jira and Confluence, add these secrets for even richer documentation:
 
 ## Key Features (v2.0)
 
-### 🔧 Automated Patch Generation
-The system automatically generates patches for detected vulnerabilities:
+### 🔧 Automated GitHub Patch Branches
+The system automatically creates GitHub branches and pull requests with security fixes:
+
+**What gets created:**
+- **Security patch branches** with descriptive names (e.g., `security-patches-20241224-123456`)
+- **GitHub pull requests** with detailed descriptions and testing checklists
+- **Confidence-based drafts** (LOW confidence patches create draft PRs for extra review)
+
+**Vulnerability fixes include:**
 - **SQL injection** fixes with parameterized queries
 - **XSS** prevention with proper escaping
 - **Hardcoded secrets** replacement with environment variables
 - **Path traversal** protection
 - **Insecure cryptography** upgrades
-- Patches include confidence levels and testing instructions
+- **Input validation** improvements
+
+**Patch Branch Options:**
+- **Enabled by default** - Creates patch branches automatically
+- **Optional PR creation** - Can auto-create GitHub PRs or create branches only
+- **Flexible base branches** - Works with main, develop, or any feature branch
+- **Confidence levels** - HIGH/MEDIUM/LOW with appropriate review requirements
+- **Branch protection** - Never modifies protected branches directly (main, master, develop, etc.)
+- **Safe operation** - Always creates new branches from the specified base branch
 
 ### 📤 Auto-Confluence Publishing
 Documents automatically publish when Confluence credentials are configured:
@@ -188,8 +203,35 @@ Uses batched processing that works with any codebase:
 ### Configuration Options
 Set these as repository variables (Settings → Secrets and variables → Actions → Variables):
 - `SECTOR`: Choose your industry (healthcare, financial, automotive, aerospace, industrial)
-- `ENABLE_PATCH_GENERATION`: Enable/disable patch generation (default: true)
 - `CONFLUENCE_PUBLISH`: Control publishing (auto/true/false)
+
+### Patch Branch Configuration (NEW!)
+Control automated patch branch creation through workflow inputs:
+- **Create patch branch**: Enable/disable automatic patch branch creation (default: enabled)
+- **Create GitHub PR**: Enable/disable automatic PR creation (default: disabled)
+- **Base branch**: Specify base branch for patches (default: main, can be develop, feature branches, etc.)
+
+**Manual Workflow Example:**
+1. Go to Actions → "Example FDA Documentation Generation"
+2. Click "Run workflow"
+3. Configure patch options:
+   - ✅ **Create patch branch with security fixes**: Default enabled
+   - ☐ **Create GitHub PR for patches**: Optional (enable for automatic PR creation)
+   - **Base branch**: Choose main, develop, or any feature branch
+
+### Branch Protection & Security 🔒
+The patch branch system includes built-in protections:
+
+**Protected Branches:**
+- Never directly modifies: `main`, `master`, `develop`, `release`, `production`, `prod`
+- Always creates new branches with descriptive names (e.g., `security-patches-HIGH-20241224-123456`)
+- Validates that base branch exists before creating patch branches
+
+**Safe Operations:**
+- **Branch validation** - Verifies base branch exists locally or on remote
+- **Name collision prevention** - Uses timestamps to ensure unique branch names
+- **Rollback capability** - Patch branches can be safely deleted if needed
+- **Review workflow** - LOW confidence patches create draft PRs requiring extra review
 
 ---
 
@@ -197,7 +239,7 @@ Set these as repository variables (Settings → Secrets and variables → Action
 
 ### ❌ "LENSAI_API_KEY is required"
 - Make sure you added the secret with the exact name `LENSAI_API_KEY`
-- Verify the API key is valid at https://cydocgen.lensai.tech/
+- Verify the API key is valid at https://app.baseten.co/
 
 ### ❌ "No documents generated"
 - Check the workflow logs for specific error messages
