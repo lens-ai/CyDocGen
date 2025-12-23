@@ -16,7 +16,7 @@ Determine which compliance framework you need:
 - **Industrial** → IEC 62443, NIST CSF (coming soon)
 
 ### Step 2: Add the Workflow
-1. Copy `client-workflow.yml` from this directory
+1. Copy `cyber-security-docgen.yml` from this directory
 2. Save it as `.github/workflows/compliance-docs.yml` in your repository
 3. Commit and push to your repository
 
