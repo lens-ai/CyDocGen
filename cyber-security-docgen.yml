@@ -77,11 +77,11 @@ jobs:
       run: |
         # Define generator version (pin to specific version for stability)
         # Options:
-        #   - Specific version: 1.2.3
-        #   - Minor version: 1.2 (auto-updates patch versions)
-        #   - Major version: 1 (auto-updates minor & patch)
-        #   - Latest: latest (always newest, less stable)
-        GENERATOR_VERSION="${{ vars.GENERATOR_VERSION || '2' }}"  # Default to major version 2
+        #   - Specific version: 2.0.1 (recommended - stable release)
+        #   - Minor version: 2.0 (auto-updates patch versions)
+        #   - Major version: 2 (auto-updates minor & patch)
+        #   - Latest: latest (always newest, updated daily with security DB)
+        GENERATOR_VERSION="${{ vars.GENERATOR_VERSION || 'latest' }}"  # Default to latest (updated daily)
 
         echo "📦 Pulling Compliance Generator container (version: ${GENERATOR_VERSION})..."
         if docker pull lensai/lensai-fda-cybersecurity:${GENERATOR_VERSION}; then
