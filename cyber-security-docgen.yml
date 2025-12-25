@@ -248,7 +248,7 @@ jobs:
           -v ${{ github.workspace }}:/repo:ro \
           -v ${{ github.workspace }}/compliance-output:/output \
           lensai/lensai-fda-cybersecurity:latest \
-          python -m src.main --mode ${{ github.event.inputs.output_format }} --output-dir /output $PATCH_ARGS
+          --mode ${{ github.event.inputs.output_format }} --output-dir /output $PATCH_ARGS
 
         # Calculate generation time
         END_TIME=$(date +%s)
