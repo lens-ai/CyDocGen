@@ -70,6 +70,18 @@ jobs:
     - name: 📋 Checkout Repository
       uses: actions/checkout@v4
 
+    - name: 🧹 Free Up Disk Space
+      uses: jlumbroso/free-disk-space@main
+      with:
+        # This removes ~30GB of disk space to prevent "No space left on device" errors
+        tool-cache: true      # Remove preinstalled tools (~14GB)
+        android: true         # Remove Android SDK (~11GB)
+        dotnet: true          # Remove .NET runtime (~2GB)
+        haskell: true         # Remove Haskell (~1GB)
+        large-packages: true  # Remove large packages (~4GB)
+        docker-images: false  # Keep Docker images (we need them!)
+        swap-storage: false   # Keep swap space
+
     - name: 🐳 Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
 
