@@ -2,6 +2,10 @@
 # Copy this file to .github/workflows/compliance-docs.yml in your repository
 # Then add required secrets to your repository settings
 # Supports: Healthcare (FDA), Financial, Automotive, Aerospace, Industrial
+#
+# SECURITY FIX: All github.event.inputs are now passed via env blocks
+# to prevent command injection (CWE-78). Never use ${{ github.event.inputs.* }}
+# directly in run: blocks.
 
 name: 📋 Generate Compliance Documentation
 
@@ -86,15 +90,10 @@ jobs:
       uses: docker/setup-buildx-action@v3
 
     - name: 📦 Pull Compliance Generator
+      env:
+        # Use env block for any variable that might be interpolated
+        GENERATOR_VERSION: ${{ vars.GENERATOR_VERSION || 'latest' }}
       run: |
-        # Define generator version (pin to specific version for stability)
-        # Options:
-        #   - Specific version: 2.0.1 (recommended - stable release)
-        #   - Minor version: 2.0 (auto-updates patch versions)
-        #   - Major version: 2 (auto-updates minor & patch)
-        #   - Latest: latest (always newest, updated daily with security DB)
-        GENERATOR_VERSION="${{ vars.GENERATOR_VERSION || 'latest' }}"  # Default to latest (updated daily)
-
         echo "📦 Pulling Compliance Generator container (version: ${GENERATOR_VERSION})..."
         if docker pull lensai/lensai-fda-cybersecurity:${GENERATOR_VERSION}; then
           echo "✅ Using Compliance Generator version: ${GENERATOR_VERSION}"
@@ -136,9 +135,19 @@ jobs:
         GITHUB_REPO: ${{ github.repository }}
         GITHUB_REPO_OWNER: ${{ github.repository_owner }}
         GITHUB_REPO_NAME: ${{ github.event.repository.name }}
+        
+        # ============================================================
+        # USER INPUTS - Passed via env to prevent command injection
+        # SECURITY: Never use ${{ github.event.inputs.* }} in run blocks
+        # ============================================================
         DEVICE_NAME: ${{ github.event.inputs.device_name }}
         DEVICE_VERSION: ${{ github.event.inputs.device_version }}
         DEVICE_MANUFACTURER: ${{ github.event.inputs.device_manufacturer }}
+        OUTPUT_FORMAT: ${{ github.event.inputs.output_format || 'full' }}
+        PUBLISH_TO_CONFLUENCE: ${{ github.event.inputs.publish_to_confluence }}
+        CREATE_PATCH_BRANCH: ${{ github.event.inputs.create_patch_branch }}
+        CREATE_PR: ${{ github.event.inputs.create_pr }}
+        BASE_BRANCH: ${{ github.event.inputs.base_branch || 'main' }}
 
         # ============================================================
         # ATLASSIAN INTEGRATION (OPTIONAL)
@@ -176,17 +185,16 @@ jobs:
 
         # Generation settings
         OUTPUT_DIR: "/output"
-        GENERATION_MODE: "${{ github.event.inputs.output_format || 'full' }}"
-        OUTPUT_FORMAT: "markdown"
+        GENERATION_MODE: ${{ github.event.inputs.output_format || 'full' }}
 
         # Evidence optimization
         FDA_MAX_CODE_EVIDENCE_CHARS: "200000"  # Preserve more code context
 
       run: |
         echo "🚀 Starting compliance documentation generation..."
-        echo "📊 Analyzing repository: ${{ github.repository }}"
+        echo "📊 Analyzing repository: ${GITHUB_REPO}"
         echo "🏢 Sector: ${SECTOR}"
-        echo "📦 Product: ${{ github.event.inputs.device_name }} v${{ github.event.inputs.device_version }}"
+        echo "📦 Product: ${DEVICE_NAME} v${DEVICE_VERSION}"
 
         # Show healthcare-specific configuration if applicable
         if [ "${SECTOR}" = "healthcare" ]; then
@@ -204,14 +212,15 @@ jobs:
         START_TIME=$(date +%s)
 
         # Build patch branch command arguments
+        # SECURITY: Using env variables instead of direct interpolation
         PATCH_ARGS=""
-        if [ "${{ github.event.inputs.create_patch_branch }}" = "true" ]; then
+        if [ "${CREATE_PATCH_BRANCH}" = "true" ]; then
           PATCH_ARGS="--create-patch-branch"
-          if [ "${{ github.event.inputs.create_pr }}" = "true" ]; then
-            PATCH_ARGS="$PATCH_ARGS --create-pr"
+          if [ "${CREATE_PR}" = "true" ]; then
+            PATCH_ARGS="${PATCH_ARGS} --create-pr"
           fi
-          PATCH_ARGS="$PATCH_ARGS --base-branch ${{ github.event.inputs.base_branch }}"
-          echo "🔧 Patch branch options: $PATCH_ARGS"
+          PATCH_ARGS="${PATCH_ARGS} --base-branch ${BASE_BRANCH}"
+          echo "🔧 Patch branch options: ${PATCH_ARGS}"
         fi
 
         # Run compliance documentation generator
@@ -260,7 +269,7 @@ jobs:
           -v ${{ github.workspace }}:/repo:ro \
           -v ${{ github.workspace }}/compliance-output:/output \
           lensai/lensai-fda-cybersecurity:latest \
-          --mode ${{ github.event.inputs.output_format }} --output-dir /output $PATCH_ARGS
+          --mode ${OUTPUT_FORMAT} --output-dir /output ${PATCH_ARGS}
 
         # Calculate generation time
         END_TIME=$(date +%s)
@@ -270,7 +279,7 @@ jobs:
         DOC_COUNT=$(find ./compliance-output -name "*.md" -type f | wc -l)
 
         # Calculate success rate
-        if [ "${{ github.event.inputs.output_format }}" = "full" ]; then
+        if [ "${OUTPUT_FORMAT}" = "full" ]; then
           TOTAL_DOCS=11
         else
           TOTAL_DOCS=6  # Essential documents only
@@ -279,7 +288,7 @@ jobs:
 
         echo "📊 GENERATION RESULTS:"
         echo "   Sector: ${SECTOR}"
-        echo "   Documents Generated: $DOC_COUNT/$TOTAL_DOCS ($SUCCESS_RATE%)"
+        echo "   Documents Generated: ${DOC_COUNT}/${TOTAL_DOCS} (${SUCCESS_RATE}%)"
         echo "   Generation Time: ${DURATION}s"
         echo "   Output Directory: ./compliance-output/"
 
@@ -295,16 +304,25 @@ jobs:
         if-no-files-found: error
 
     - name: 📋 Summary
+      env:
+        # ============================================================
+        # SECURITY FIX: Pass all user inputs via env block
+        # This prevents command injection (CWE-78) attacks
+        # ============================================================
+        SECTOR: ${{ vars.SECTOR || 'healthcare' }}
+        DEVICE_NAME: ${{ github.event.inputs.device_name }}
+        DEVICE_MANUFACTURER: ${{ github.event.inputs.device_manufacturer }}
+        DEVICE_VERSION: ${{ github.event.inputs.device_version }}
+        OUTPUT_FORMAT: ${{ github.event.inputs.output_format || 'full' }}
       run: |
         echo "## 📋 Compliance Documentation Generated" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "### ✅ Success!" >> $GITHUB_STEP_SUMMARY
         echo "- **Sector**: ${SECTOR}" >> $GITHUB_STEP_SUMMARY
-        echo "- **Product**: ${{ github.event.inputs.device_name }}" >> $GITHUB_STEP_SUMMARY
-        echo "- **Manufacturer**: ${{ github.event.inputs.device_manufacturer }}" >> $GITHUB_STEP_SUMMARY
-        echo "- **Version**: ${{ github.event.inputs.device_version }}" >> $GITHUB_STEP_SUMMARY
-        echo "- **Format**: ${{ github.event.inputs.output_format }}" >> $GITHUB_STEP_SUMMARY
-        echo "- **Documents**: $(find ./compliance-output -name "*.md" -type f | wc -l)" >> $GITHUB_STEP_SUMMARY
+        echo "- **Product**: ${DEVICE_NAME}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Manufacturer**: ${DEVICE_MANUFACTURER}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Version**: ${DEVICE_VERSION}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Format**: ${OUTPUT_FORMAT}" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "### 📄 Generated Files:" >> $GITHUB_STEP_SUMMARY
         find ./compliance-output -name "*.md" -type f -exec basename {} \; | sort | sed 's/^/- ✅ /' >> $GITHUB_STEP_SUMMARY
@@ -314,6 +332,13 @@ jobs:
 # ============================================================
 # CONFIGURATION NOTES
 # ============================================================
+#
+# SECURITY NOTE (CWE-78 - Command Injection Prevention):
+# All github.event.inputs values are passed through env: blocks
+# and referenced as ${VAR_NAME} in run: blocks. This prevents
+# command injection attacks where malicious input could execute
+# arbitrary commands. NEVER use ${{ github.event.inputs.* }}
+# directly in run: blocks.
 #
 # SECTOR CONFIGURATION:
 # Set the SECTOR repository variable to choose your compliance framework:
