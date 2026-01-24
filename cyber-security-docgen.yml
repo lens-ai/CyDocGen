@@ -39,12 +39,12 @@ on:
         type: boolean
         default: false
       create_patch_branch:
-        description: 'Create patch branch with security fixes'
+        description: 'Create patch branch with security fixes (requires contents: write)'
         required: false
         type: boolean
-        default: true
+        default: false
       create_pr:
-        description: 'Create GitHub PR for patches'
+        description: 'Create GitHub PR for patches (requires pull-requests: write)'
         required: false
         type: boolean
         default: false
@@ -65,10 +65,12 @@ jobs:
     name: 📋 Generate Compliance Documents
     runs-on: ubuntu-latest
     permissions:
-      contents: write       # Write for patch branch creation
-      issues: read          # Read issues
-      pull-requests: write  # Write for creating patch PRs
-      security-events: read # Read security advisories
+      contents: read        # Read-only access (write only needed if create_patch_branch=true)
+      issues: read          # Read-only access to issues
+      pull-requests: read   # Read-only access (write only needed if create_pr=true)
+      security-events: read # Read-only access to security advisories
+      # SECURITY NOTE: Set create_patch_branch=false and create_pr=false to minimize permissions
+      # If patch generation is disabled, this workflow operates with read-only access
 
     steps:
     - name: 📋 Checkout Repository
