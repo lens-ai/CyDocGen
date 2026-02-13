@@ -1,7 +1,7 @@
 # 📋 Compliance Documentation Generator - Multi-Sector Client Workflow
 # Copy this file to .github/workflows/compliance-docs.yml in your repository
 # Then add required secrets to your repository settings
-# Supports: Healthcare (FDA), Financial, Automotive, Aerospace, Industrial
+# Supports: Healthcare (FDA), EU CRA (Cyber Resilience Act)
 #
 # SECURITY FIX: All github.event.inputs are now passed via env blocks
 # to prevent command injection (CWE-78). Never use ${{ github.event.inputs.* }}
@@ -13,6 +13,14 @@ on:
   # Manual trigger - for ad-hoc documentation generation
   workflow_dispatch:
     inputs:
+      sector:
+        description: 'Compliance Sector'
+        required: false
+        default: 'healthcare'
+        type: choice
+        options:
+          - healthcare   # FDA (US Medical Devices)
+          - cra          # EU Cyber Resilience Act
       device_name:
         description: 'Your Product/System Name'
         required: true
@@ -111,9 +119,11 @@ jobs:
     - name: 📋 Generate Compliance Documentation
       env:
         # ============================================================
-        # SECTOR CONFIGURATION (NEW!)
+        # SECTOR CONFIGURATION
         # ============================================================
-        SECTOR: ${{ vars.SECTOR || 'healthcare' }}  # healthcare, financial, automotive, aerospace, industrial
+        # Priority: 1. Workflow input 2. Repository variable 3. Default (healthcare=FDA)
+        # Options: healthcare (FDA), cra (EU Cyber Resilience Act)
+        SECTOR: ${{ github.event.inputs.sector || vars.SECTOR || 'healthcare' }}
 
         # ============================================================
         # HEALTHCARE-SPECIFIC VARIABLES (Optional)
@@ -311,7 +321,7 @@ jobs:
         # SECURITY FIX: Pass all user inputs via env block
         # This prevents command injection (CWE-78) attacks
         # ============================================================
-        SECTOR: ${{ vars.SECTOR || 'healthcare' }}
+        SECTOR: ${{ github.event.inputs.sector || vars.SECTOR || 'healthcare' }}
         DEVICE_NAME: ${{ github.event.inputs.device_name }}
         DEVICE_MANUFACTURER: ${{ github.event.inputs.device_manufacturer }}
         DEVICE_VERSION: ${{ github.event.inputs.device_version }}
@@ -343,15 +353,15 @@ jobs:
 # directly in run: blocks.
 #
 # SECTOR CONFIGURATION:
-# Set the SECTOR repository variable to choose your compliance framework:
+# Choose your compliance framework via workflow input or repository variable:
 # - healthcare: FDA 524B, ISO 14971, IEC 81001-5-1 (default)
-# - financial: SOX, MiFID II, PCI-DSS (planned)
-# - automotive: ISO 26262, ASIL-D (planned)
-# - aerospace: DO-178C, DO-254 (planned)
-# - industrial: IEC 62443, NIST CSF (planned)
+# - cra: EU Cyber Resilience Act (Regulation 2024/2847)
 #
-# To set: Go to Settings → Secrets and variables → Actions → Variables
-# Add variable: SECTOR = your_sector
+# Three ways to set:
+# 1. Workflow manual run → Select sector dropdown (healthcare or cra)
+# 2. Repository variable → Settings → Secrets and variables → Actions → Variables
+#    Add variable: SECTOR = healthcare (or cra)
+# 3. Default: healthcare (FDA) if not specified
 #
 # HEALTHCARE-SPECIFIC VARIABLES:
 # For medical devices, set these repository variables for enhanced documentation:
