@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Complira AssureTrust - Autonomous FDA 524B Cybersecurity Compliance Engine for Medical Devices">
+    <meta property="og:title" content="Complira AssureTrust - FDA 524B Compliance for Medical Devices" />
+    <meta property="og:description" content="Stop wasting engineering hours on FDA cybersecurity compliance documentation. Autonomous AI engine for medical device manufacturers." />
+    <title>Complira AssureTrust - FDA 524B Cybersecurity Compliance</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Figtree:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --void: #07080f;
+            --teal: #00e8c4;
+            --orange: #f97316;
+            --surface-1: #0d1017;
+            --surface-2: #131720;
+            --surface-3: #1a1f2e;
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --font-display: 'Outfit', sans-serif;
+            --font-body: 'Figtree', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--void);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .grid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(rgba(0, 232, 196, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 232, 196, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* CRA Cross-Link Banner */
+        .cra-banner {
+            background: linear-gradient(135deg, var(--teal), #00b4d8);
+            padding: 12px 0;
+            text-align: center;
+            font-family: var(--font-display);
+            font-weight: 500;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 232, 196, 0.2);
+        }
+
+        .cra-banner a {
+            color: var(--void);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cra-banner a:hover {
+            text-decoration: underline;
+        }
+
+        /* Header */
+        header {
+            background: rgba(13, 16, 23, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: sticky;
+            top: 40px;
+            z-index: 999;
+            border-bottom: 1px solid rgba(0, 232, 196, 0.1);
+        }
+
+        .navbar-brand {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--teal) !important;
+            text-shadow: 0 0 20px rgba(0, 232, 196, 0.3);
+        }
+
+        .nav-link {
+            color: var(--text-secondary) !important;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-link:hover {
+            color: var(--teal) !important;
+        }
+
+        .btn-primary {
+            background: var(--teal);
+            border: none;
+            color: var(--void);
+            font-weight: 600;
+            padding: 0.5rem 1.5rem;
+            border-radius: 8px;
+            transition: all 0.3s;
+            box-shadow: 0 0 20px rgba(0, 232, 196, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: #00d4b0;
+            box-shadow: 0 0 30px rgba(0, 232, 196, 0.5);
+            transform: translateY(-2px);
+        }
+
+        /* Hero */
+        .hero {
+            padding: 6rem 0 4rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(249, 115, 22, 0.1);
+            border: 1px solid rgba(249, 115, 22, 0.3);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--orange);
+            margin-bottom: 2rem;
+            font-family: var(--font-mono);
+        }
+
+        .pulse {
+            width: 8px;
+            height: 8px;
+            background: var(--orange);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        .hero h1 {
+            font-family: var(--font-display);
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .hero h1 em {
+            background: linear-gradient(135deg, var(--orange), #f59e0b, var(--orange));
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-style: normal;
+            animation: gradientShift 3s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 2.5rem;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--orange);
+            color: var(--orange);
+            font-weight: 600;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(249, 115, 22, 0.1);
+            border-color: var(--orange);
+            color: var(--orange);
+            box-shadow: 0 0 20px rgba(249, 115, 22, 0.3);
+        }
+
+        /* Section Styles */
+        section {
+            padding: 5rem 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-tag {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--orange);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .section-header h2 {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .section-header p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Module Cards */
+        .module-card {
+            background: var(--surface-1);
+            border: 1px solid rgba(0, 232, 196, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            height: 100%;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .module-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--orange), var(--teal));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .module-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--orange);
+            box-shadow: 0 10px 40px rgba(249, 115, 22, 0.2);
+        }
+
+        .module-card:hover::before {
+            opacity: 1;
+        }
+
+        .module-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .module-card h3 {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--teal);
+        }
+
+        .module-card .fda-ref {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--orange);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .module-card p {
+            color: var(--text-secondary);
+            margin-bottom: 0;
+        }
+
+        /* Tools Section */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .tool-category {
+            background: var(--surface-2);
+            border: 1px solid rgba(0, 232, 196, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .tool-category h4 {
+            font-family: var(--font-display);
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--orange);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .tool-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tool-chip {
+            background: rgba(0, 232, 196, 0.1);
+            border: 1px solid rgba(0, 232, 196, 0.3);
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--teal);
+            transition: all 0.2s;
+        }
+
+        .tool-chip:hover {
+            background: rgba(0, 232, 196, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Stats Section */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            font-family: var(--font-display);
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--orange);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        /* ROI Section */
+        .roi-comparison {
+            background: var(--surface-1);
+            border-radius: 16px;
+            padding: 3rem;
+            border: 1px solid rgba(249, 115, 22, 0.2);
+        }
+
+        .roi-comparison h3 {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .comparison-table {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1px;
+            background: rgba(0, 232, 196, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .comparison-table > div {
+            background: var(--surface-2);
+            padding: 1.5rem;
+        }
+
+        .comparison-table .header {
+            font-weight: 600;
+            color: var(--orange);
+            font-family: var(--font-display);
+        }
+
+        /* Partners Section */
+        .partners-grid {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+            opacity: 0.6;
+        }
+
+        .partner-logo {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--surface-1);
+            padding: 3rem 0 1.5rem;
+            border-top: 1px solid rgba(0, 232, 196, 0.1);
+            margin-top: 5rem;
+        }
+
+        footer a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer a:hover {
+            color: var(--teal);
+        }
+
+        .footer-brand {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: var(--teal);
+            margin-bottom: 1rem;
+        }
+
+        /* Reveal Animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Modal */
+        .modal-content {
+            background: var(--surface-2);
+            border: 1px solid rgba(0, 232, 196, 0.2);
+            color: var(--text-primary);
+        }
+
+        .modal-header {
+            border-bottom: 1px solid rgba(0, 232, 196, 0.1);
+        }
+
+        .modal-footer {
+            border-top: 1px solid rgba(0, 232, 196, 0.1);
+        }
+
+        .form-control, .form-select {
+            background: var(--surface-1);
+            border: 1px solid rgba(0, 232, 196, 0.2);
+            color: var(--text-primary);
+        }
+
+        .form-control:focus, .form-select:focus {
+            background: var(--surface-1);
+            border-color: var(--teal);
+            color: var(--text-primary);
+            box-shadow: 0 0 0 0.25rem rgba(0, 232, 196, 0.1);
+        }
+
+        .form-label {
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .section-header h2 { font-size: 2rem; }
+            .comparison-table { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-bg"></div>
+    <div class="content-wrapper">
+
+        <!-- CRA Cross-Link Banner -->
+        <div class="cra-banner">
+            <a href="index.html">
+                <span>🇪🇺</span>
+                <span>Selling in EU? CRA compliance is mandatory for all digital products by 2027</span>
+                <span>→</span>
+            </a>
+        </div>
+
+        <!-- Header -->
+        <header>
+            <nav class="navbar navbar-expand-lg container">
+                <a class="navbar-brand" href="#">Complira AssureTrust</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                    <ul class="navbar-nav align-items-center gap-3">
+                        <li class="nav-item"><a class="nav-link" href="#modules">Modules</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#tools">Security Tools</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#roi">ROI</a></li>
+                        <li class="nav-item"><a class="nav-link" href="index.html">CRA Compliance</a></li>
+                        <li class="nav-item">
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#demoModal">Book Demo</button>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="container">
+                <div class="hero-tag">
+                    <span class="pulse"></span>
+                    FDA 524B Cybersecurity for Medical Devices
+                </div>
+                <h1>The Autonomous <em>FDA Compliance Engine</em></h1>
+                <p>Stop wasting engineering hours on FDA cybersecurity compliance documentation. Our AI-powered engine automates SBOM generation, vulnerability management, and premarket submissions for medical device manufacturers.</p>
+                <div class="hero-cta">
+                    <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#demoModal">Get Started</button>
+                    <a href="#modules" class="btn btn-secondary btn-lg">Learn More</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Modules Section -->
+        <section id="modules">
+            <div class="container">
+                <div class="section-header reveal">
+                    <span class="section-tag">// SIX AUTONOMOUS MODULES</span>
+                    <h2>Built for FDA 524B Compliance</h2>
+                    <p>Each module autonomously handles critical requirements from FDA's premarket cybersecurity guidance and postmarket management rules.</p>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-lg-4 col-md-6 reveal">
+                        <div class="module-card">
+                            <div class="module-icon">🔍</div>
+                            <h3>C-Scan</h3>
+                            <span class="fda-ref">FDA 524B § IV.A - Cybersecurity Risk Management</span>
+                            <p>Autonomous scanning across 23+ security tools (SAST, DAST, SCA, secrets detection). Generates comprehensive SBOM and vulnerability assessments required for premarket submissions.</p>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6 reveal">
+                        <div class="module-card">
+                            <div class="module-icon">🧠</div>
+                            <h3>C-Reason</h3>
+                            <span class="fda-ref">FDA 524B § IV.B - Security Architecture</span>
+                            <p>AI-powered analysis of device architecture, threat modeling (STRIDE/CAPEC), and cybersecurity risk assessment. Automatically documents security controls and design justifications.</p>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6 reveal">
+                        <div class="module-card">
+                            <div class="module-icon">🔧</div>
+                            <h3>C-Patch</h3>
+                            <span class="fda-ref">FDA 524B § V - Software Bill of Materials</span>
+                            <p>Autonomous SBOM generation and dependency tracking. Monitors CVEs, generates patch recommendations, and maintains compliance with FDA's SBOM requirements for medical devices.</p>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6 reveal">
+                        <div class="module-card">
+                            <div class="module-icon">📋</div>
+                            <h3>C-Evidence</h3>
+                            <span class="fda-ref">FDA 524B § VI - Documentation</span>
+                            <p>Automated generation of premarket cybersecurity documentation including security risk management plans, threat models, and vulnerability assessments for 510(k)/PMA submissions.</p>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6 reveal">
+                        <div class="module-card">
+                            <div class="module-icon">🔄</div>
+                            <h3>C-Continuous</h3>
+                            <span class="fda-ref">FDA Postmarket § 522 - Monitoring</span>
+                            <p>Continuous postmarket cybersecurity monitoring, incident tracking, and automated MDR reporting for cybersecurity vulnerabilities and exploits in deployed medical devices.</p>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6 reveal">
+                        <div class="module-card">
+                            <div class="module-icon">✅</div>
+                            <h3>C-Trust</h3>
+                            <span class="fda-ref">FDA 524B § VII - Transparency</span>
+                            <p>Centralized compliance dashboard showing FDA readiness status, vulnerability metrics, SBOM completeness, and audit trails for regulators and quality assurance teams.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tools Section -->
+        <section id="tools" style="background: var(--surface-1);">
+            <div class="container">
+                <div class="section-header reveal">
+                    <span class="section-tag">// 23+ INTEGRATED SECURITY TOOLS</span>
+                    <h2>Comprehensive Device Security Analysis</h2>
+                    <p>We integrate the industry's leading security tools to provide complete coverage for FDA cybersecurity requirements.</p>
+                </div>
+
+                <div class="tools-grid reveal">
+                    <div class="tool-category">
+                        <h4>SAST Analysis</h4>
+                        <div class="tool-chips">
+                            <span class="tool-chip">Semgrep (20+ rules)</span>
+                            <span class="tool-chip">Bandit</span>
+                            <span class="tool-chip">Flawfinder</span>
+                            <span class="tool-chip">Checkov</span>
+                        </div>
+                    </div>
+
+                    <div class="tool-category">
+                        <h4>Vulnerability Scanners</h4>
+                        <div class="tool-chips">
+                            <span class="tool-chip">Grype</span>
+                            <span class="tool-chip">Trivy</span>
+                            <span class="tool-chip">OSV Scanner</span>
+                            <span class="tool-chip">Bomber</span>
+                        </div>
+                    </div>
+
+                    <div class="tool-category">
+                        <h4>SBOM Generation</h4>
+                        <div class="tool-chips">
+                            <span class="tool-chip">Syft</span>
+                            <span class="tool-chip">CycloneDX</span>
+                            <span class="tool-chip">Microsoft SBOM Tool</span>
+                        </div>
+                    </div>
+
+                    <div class="tool-category">
+                        <h4>Secrets Detection</h4>
+                        <div class="tool-chips">
+                            <span class="tool-chip">TruffleHog</span>
+                            <span class="tool-chip">Gitleaks</span>
+                        </div>
+                    </div>
+
+                    <div class="tool-category">
+                        <h4>Dependency Security</h4>
+                        <div class="tool-chips">
+                            <span class="tool-chip">Safety</span>
+                            <span class="tool-chip">pip-audit</span>
+                        </div>
+                    </div>
+
+                    <div class="tool-category">
+                        <h4>Code Quality</h4>
+                        <div class="tool-chips">
+                            <span class="tool-chip">Radon</span>
+                            <span class="tool-chip">Lizard</span>
+                            <span class="tool-chip">Checksec</span>
+                            <span class="tool-chip">BinSkim</span>
+                        </div>
+                    </div>
+
+                    <div class="tool-category">
+                        <h4>DAST & Runtime</h4>
+                        <div class="tool-chips">
+                            <span class="tool-chip">OWASP ZAP</span>
+                        </div>
+                    </div>
+
+                    <div class="tool-category">
+                        <h4>MCP Integrations</h4>
+                        <div class="tool-chips">
+                            <span class="tool-chip">GitHub</span>
+                            <span class="tool-chip">Jira</span>
+                            <span class="tool-chip">Confluence</span>
+                        </div>
+                    </div>
+
+                    <div class="tool-category">
+                        <h4>AI Analyzers</h4>
+                        <div class="tool-chips">
+                            <span class="tool-chip">Code Analyzer</span>
+                            <span class="tool-chip">Architecture Extractor</span>
+                            <span class="tool-chip">Security Controls</span>
+                            <span class="tool-chip">STRIDE/CAPEC</span>
+                            <span class="tool-chip">Risk Analyzer</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section>
+            <div class="container">
+                <div class="stats-grid reveal">
+                    <div class="stat-card">
+                        <h3><span class="counter" data-target="95">0</span>%</h3>
+                        <p>Faster Documentation</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3><span class="counter" data-target="23">0</span>+</h3>
+                        <p>Security Tools Integrated</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3><span class="counter" data-target="100">0</span>%</h3>
+                        <p>FDA 524B Coverage</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3><span class="counter" data-target="24">0</span>/7</h3>
+                        <p>Continuous Monitoring</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ROI Section -->
+        <section id="roi" style="background: var(--surface-1);">
+            <div class="container">
+                <div class="roi-comparison reveal">
+                    <h3>Stop wasting engineering hours on compliance documentation.</h3>
+                    <div class="comparison-table">
+                        <div class="header">Task</div>
+                        <div class="header">Manual Process</div>
+                        <div class="header">With AssureTrust</div>
+
+                        <div>SBOM Generation</div>
+                        <div>40+ hours</div>
+                        <div style="color: var(--teal); font-weight: 600;">5 minutes</div>
+
+                        <div>Threat Modeling</div>
+                        <div>80+ hours</div>
+                        <div style="color: var(--teal); font-weight: 600;">15 minutes</div>
+
+                        <div>Vulnerability Assessment</div>
+                        <div>60+ hours</div>
+                        <div style="color: var(--teal); font-weight: 600;">10 minutes</div>
+
+                        <div>Premarket Documentation</div>
+                        <div>120+ hours</div>
+                        <div style="color: var(--teal); font-weight: 600;">30 minutes</div>
+
+                        <div>Postmarket Monitoring</div>
+                        <div>Ongoing manual effort</div>
+                        <div style="color: var(--teal); font-weight: 600;">Fully automated</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Partners Section -->
+        <section>
+            <div class="container">
+                <div class="section-header reveal">
+                    <span class="section-tag">// TRUSTED BY</span>
+                    <h2>Industry Partners</h2>
+                </div>
+                <div class="partners-grid reveal">
+                    <div class="partner-logo">Baseten</div>
+                    <div class="partner-logo">NVIDIA Inception</div>
+                    <div class="partner-logo">CMU CyLab</div>
+                    <div class="partner-logo">CHAI</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <div class="footer-brand">Complira AssureTrust</div>
+                        <p class="text-secondary">Autonomous FDA 524B compliance engine for medical device manufacturers.</p>
+                        <p class="text-secondary" style="font-family: var(--font-mono); font-size: 0.85rem;">fda.complira.co</p>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <h5>Product</h5>
+                        <ul class="list-unstyled">
+                            <li><a href="#modules">Modules</a></li>
+                            <li><a href="#tools">Security Tools</a></li>
+                            <li><a href="index.html">CRA Compliance →</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <h5>Company</h5>
+                        <ul class="list-unstyled">
+                            <li><a href="https://complira.co">About</a></li>
+                            <li><a href="#" data-bs-toggle="modal" data-bs-target="#demoModal">Contact</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="text-center mt-4 pt-4" style="border-top: 1px solid rgba(0, 232, 196, 0.1);">
+                    <p class="text-secondary mb-0">&copy; 2025 Complira AssureTrust. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- Demo Modal -->
+    <div class="modal fade" id="demoModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Book a Demo</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label">Name</label>
+                            <input type="text" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Company</label>
+                            <input type="text" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Device Type</label>
+                            <select class="form-select">
+                                <option>Class I</option>
+                                <option>Class II</option>
+                                <option>Class III</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Reveal on scroll
+        function reveal() {
+            const reveals = document.querySelectorAll('.reveal');
+            reveals.forEach(element => {
+                const windowHeight = window.innerHeight;
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                if (elementTop < windowHeight - elementVisible) {
+                    element.classList.add('active');
+                }
+            });
+        }
+        window.addEventListener('scroll', reveal);
+        reveal();
+
+        // Counter animation
+        const counters = document.querySelectorAll('.counter');
+        const speed = 200;
+
+        counters.forEach(counter => {
+            const updateCount = () => {
+                const target = +counter.getAttribute('data-target');
+                const count = +counter.innerText;
+                const inc = target / speed;
+
+                if (count < target) {
+                    counter.innerText = Math.ceil(count + inc);
+                    setTimeout(updateCount, 1);
+                } else {
+                    counter.innerText = target;
+                }
+            };
+
+            const observer = new IntersectionObserver(entries => {
+                if (entries[0].isIntersecting) {
+                    updateCount();
+                    observer.disconnect();
+                }
+            });
+
+            observer.observe(counter);
+        });
+    </script>
+</body>
+</html>
