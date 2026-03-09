@@ -1,7 +1,14 @@
 # 📋 Compliance Documentation Generator - Multi-Sector Client Workflow
+# Version: v2.3.0 (March 2026)
 # Copy this file to .github/workflows/compliance-docs.yml in your repository
 # Then add required secrets to your repository settings
 # Supports: Healthcare (FDA), EU CRA (Cyber Resilience Act)
+#
+# CHANGELOG v2.3.0:
+# - 🚀 Parallel test execution with pytest-xdist (3x faster CI/CD)
+# - 🔒 Trivy scanner upgraded to v0.69.2 (security fix)
+# - 📊 Enhanced performance metrics and monitoring
+# - 🐛 Bug fixes for Microsoft SBOM Tool verification
 #
 # SECURITY FIX: All github.event.inputs are now passed via env blocks
 # to prevent command injection (CWE-78). Never use ${{ github.event.inputs.* }}
@@ -60,6 +67,15 @@ on:
         description: 'Base branch for patch branch'
         required: false
         default: 'main'
+      firmware_rootfs:
+        description: 'Path to Yocto rootfs directory (for embedded Linux firmware analysis with 40-60% CVE false positive reduction)'
+        required: false
+      yocto_build_sbom:
+        description: 'Path to SPDX JSON from Yocto create-spdx class'
+        required: false
+      yocto_cve_check:
+        description: 'Path to cve-check.json from Yocto cve-check class'
+        required: false
 
   # Automatic trigger - on release tags
   push:
@@ -102,6 +118,8 @@ jobs:
     - name: 📦 Pull Compliance Generator
       env:
         # Use env block for any variable that might be interpolated
+        # Recommended: Set GENERATOR_VERSION repository variable to 'v2.3.0' for stability
+        # Or use 'latest' for automatic updates (default)
         GENERATOR_VERSION: ${{ vars.GENERATOR_VERSION || 'latest' }}
       run: |
         echo "📦 Pulling Compliance Generator container (version: ${GENERATOR_VERSION})..."
@@ -160,6 +178,15 @@ jobs:
         CREATE_PATCH_BRANCH: ${{ github.event.inputs.create_patch_branch }}
         CREATE_PR: ${{ github.event.inputs.create_pr }}
         BASE_BRANCH: ${{ github.event.inputs.base_branch || 'main' }}
+
+        # ============================================================
+        # FIRMWARE ANALYSIS (OPTIONAL - NEW!)
+        # Yocto/Embedded Linux firmware scanning
+        # Reduces CVE false positives by 40-60% via build-time evidence fusion
+        # ============================================================
+        FIRMWARE_ROOTFS: ${{ github.event.inputs.firmware_rootfs }}
+        YOCTO_BUILD_SBOM: ${{ github.event.inputs.yocto_build_sbom }}
+        YOCTO_CVE_CHECK: ${{ github.event.inputs.yocto_cve_check }}
 
         # ============================================================
         # ATLASSIAN INTEGRATION (OPTIONAL)
@@ -277,6 +304,9 @@ jobs:
           -e GENERATION_MODE \
           -e OUTPUT_FORMAT \
           -e FDA_MAX_CODE_EVIDENCE_CHARS \
+          -e FIRMWARE_ROOTFS \
+          -e YOCTO_BUILD_SBOM \
+          -e YOCTO_CVE_CHECK \
           -v /var/run/docker.sock:/var/run/docker.sock \
           -v ${{ github.workspace }}:/repo:ro \
           -v ${{ github.workspace }}/compliance-output:/output \
